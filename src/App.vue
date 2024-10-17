@@ -23,7 +23,6 @@ function onChangePage(page) {
       <div class="header-wrapper">
         <Header></Header>
       </div>
-      <!-- <RouterView /> -->
       <div class="content-wrapper">
         <div class="filter-bar-wrapper">
           <FilterBar @update-service="onUpdateSelectedService"></FilterBar>
@@ -55,53 +54,60 @@ function onChangePage(page) {
 .grid-container {
   display: grid;
   grid-template-columns: 5em 1fr;
-  background-color: rgb(243, 242, 242);
+  background-color: rgb(236, 235, 235);
   font-family: 'varela-round';
+  position: relative;
 }
 
 .side-bar-wrapper {
   display: flex;
   flex-direction: column;
-  grid-column: 1;
+  width: 5em;
   height: 100vh;
-  /* background-color: rgb(255, 255, 255); */
+  position: fixed;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
   padding: 1em 0.75em;
+  border-radius: 2em;
+  z-index: 10; /* Ensure it stays above the main content */
 }
+
 .main-content-wrapper {
   display: grid;
   grid-template-rows: 5em 1fr;
   grid-column: 2 / 3;
+  padding-left: 2em; /* Add padding equal to sidebar width */
 }
+
 .header-wrapper {
   display: flex;
   padding: 1em;
   grid-row: 1 / 2;
-  /* background-color: rgb(255, 255, 255); */
   padding-top: 1em;
 }
+
 .content-wrapper {
   display: grid;
-  padding: 2em;
+  padding-right: 2em;
   padding-top: 1em;
   grid-template-rows: 5em 1fr;
 }
+
 .filter-bar-wrapper {
   display: flex;
   padding-top: 1em;
   padding-bottom: 1em;
   grid-row: 1 / 2;
-  /* background-color: rgb(180, 178, 178); */
 }
+
 .page {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-row: 2 / 3;
   grid-auto-flow: row;
   grid-auto-rows: min-content;
-  /* background-color: rgb(244, 244, 244); */
-  padding: 2em;
   margin-top: 3em;
-  /* height: 100% - 4em; */
-  /* border: 1px solid black; */
 }
 </style>

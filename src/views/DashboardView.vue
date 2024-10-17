@@ -9,6 +9,12 @@
   <div class="chart-wrapper mem">
     <MemUsage :service="props.selectedService"></MemUsage>
   </div>
+  <div
+    v-if="props.selectedService && props.selectedService !== 'All'"
+    class="chart-wrapper req-path"
+  >
+    <RequestPath :service="props.selectedService"></RequestPath>
+  </div>
 </template>
 
 <script setup>
@@ -33,9 +39,11 @@ const props = defineProps(['selectedService'])
   grid-column: 6 / 13;
 }
 .mem {
-  grid-column: 1 /8;
+  grid-column: 1 /7;
 }
-
+.req-path {
+  grid-column: 1/5;
+}
 .font-varela {
   font-family: 'varela-round';
 }

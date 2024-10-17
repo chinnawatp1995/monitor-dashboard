@@ -1,6 +1,6 @@
 <template>
   <div class="head">
-    <h2>Mem Usage</h2>
+    <h2>CPU Usage</h2>
     <div class="filter">
       <Calendar id="start-24h" v-model="startTime" showTime hourFormat="24" />
       <i class="pi pi-arrow-right arrow" style="color: #708090"></i>

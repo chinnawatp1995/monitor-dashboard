@@ -56,7 +56,7 @@ function changePage(p) {
 
 <style>
 .side-bar-header {
-  align-self: center;
+  /* align-self: center; */
   height: 40%;
   width: 100%;
   background-color: rgb(255, 255, 255);
@@ -66,6 +66,7 @@ function changePage(p) {
 .side-bar-menu {
   display: flex;
   height: 100%;
+  width: 100%;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;

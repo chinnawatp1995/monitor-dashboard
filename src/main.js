@@ -9,6 +9,7 @@ import Header from './components/Header.vue'
 import ServerStatus from './components/ServerStatus.vue'
 import CpuUsage from './components/CpuUsage.vue'
 import MemUsage from './components/MemUsage.vue'
+import RequestPath from './components/RequestPath.vue'
 
 import App from './App.vue'
 import router from './router'
@@ -62,6 +63,7 @@ app.component('Header', Header)
 app.component('ServerStatus', ServerStatus)
 app.component('CpuUsage', CpuUsage)
 app.component('MemUsage', MemUsage)
+app.component('RequestPath', RequestPath)
 
 app.component('Chart', Chart)
 

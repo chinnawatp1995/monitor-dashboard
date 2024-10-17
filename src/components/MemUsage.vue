@@ -1,6 +1,6 @@
 <template>
   <div class="head">
-    <h2>Mem Usage</h2>
+    <h2>Memory Usage</h2>
     <div class="filter">
       <Calendar id="start-24h" v-model="startTime" showTime hourFormat="24" />
       <i class="pi pi-arrow-right arrow" style="color: #708090"></i>
@@ -20,7 +20,7 @@
     type="line"
     :data="chartData"
     :options="chartOptions"
-    class="h-[100 rem]"
+    class="h-[10 rem]"
   />
 </template>
 
