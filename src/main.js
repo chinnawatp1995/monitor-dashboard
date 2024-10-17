@@ -26,6 +26,7 @@ import Column from 'primevue/column'
 import ColumnGroup from 'primevue/columngroup' // optional
 import Row from 'primevue/row'
 import Calendar from 'primevue/calendar'
+import SelectButton from 'primevue/selectbutton'
 
 import Aura from '@primevue/themes/aura'
 import Lara from '@primevue/themes/lara'
@@ -53,6 +54,7 @@ app.component('Column', Column)
 app.component('ColumnGroup', ColumnGroup)
 app.component('Row', Row)
 app.component('Calendar', Calendar)
+app.component('SelectButton', SelectButton)
 
 app.component('SideBar', SideBar)
 app.component('FilterBar', FilterBar)

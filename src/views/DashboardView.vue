@@ -9,8 +9,6 @@
   <div class="chart-wrapper mem">
     <MemUsage :service="props.selectedService"></MemUsage>
   </div>
-  <div class="b">b</div>
-  <div class="c">c</div>
 </template>
 
 <script setup>
