@@ -28,6 +28,8 @@
 import axios from 'axios'
 import { subMonths } from 'date-fns'
 import { ref, onMounted, onBeforeUnmount, watch, defineProps } from 'vue'
+import { theme1, theme2, theme3 } from './color-palette/palette-1'
+import { Colors } from 'chart.js'
 
 const cpuData = ref([])
 const chartData = ref()
@@ -98,13 +100,15 @@ function updateChart() {
       }
       return
     }
-
+    let ii = 0
     const labels = cpuData.value[keys[0]].map(d => d.bucket)
     const datasets = Object.entries(cpuData.value).map(([k, v]) => {
       return {
         label: k,
         fill: false,
-        borderColor: '#f22222',
+        borderColor: theme3[ii++ % theme3.length],
+        fill: true,
+        // backgroundColor: theme3[ii++ % theme3.length],
         yAxisID: '%',
         tension: 0.4,
         data: v.map(avg => avg.avg),

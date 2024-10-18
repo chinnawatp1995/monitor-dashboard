@@ -85,8 +85,8 @@ function changePage(p) {
 }
 
 .icon:hover {
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(226, 226, 226);
   border-radius: 0.5em;
-  border: 1px dashed rgb(91, 111, 129);
+  /* border: 1px solid rgb(91, 111, 129); */
 }
 </style>

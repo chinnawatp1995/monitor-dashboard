@@ -6,6 +6,9 @@
   <div class="chart-wrapper cpu">
     <CpuUsage :service="props.selectedService"></CpuUsage>
   </div>
+  <div class="chart-wrapper req">
+    <TotalRequest :service="props.selectedService"></TotalRequest>
+  </div>
   <div class="chart-wrapper mem">
     <MemUsage :service="props.selectedService"></MemUsage>
   </div>
@@ -15,15 +18,34 @@
   >
     <RequestPath :service="props.selectedService"></RequestPath>
   </div>
+  <div class="chart-wrapper avg-response">
+    <ResponseAvg :service="props.selectedService"></ResponseAvg>
+  </div>
+  <div
+    v-if="props.selectedService && props.selectedService !== 'All'"
+    class="chart-wrapper error-ranking"
+  >
+    <ErrorRanking :service="props.selectedService"></ErrorRanking>
+  </div>
+  <div
+    v-if="props.selectedService && props.selectedService !== 'All'"
+    class="chart-wrapper error-rate"
+  >
+    <ErrorToReq :service="props.selectedService"></ErrorToReq>
+  </div>
 </template>
 
 <script setup>
+import ErrorToReq from '../components/ErrorToReq.vue'
+import ResponseAvg from '../components/ResponseAvg.vue'
+import TotalRequest from '../components/TotalRequest.vue'
+
 const props = defineProps(['selectedService'])
 </script>
 
 <style>
 .chart-wrapper {
-  display: grid;
+  /* display: grid; */
   /* grid-column: 1 / 7; */
   background-color: rgb(255, 255, 255);
   padding: 1em;
@@ -39,10 +61,22 @@ const props = defineProps(['selectedService'])
   grid-column: 6 / 13;
 }
 .mem {
-  grid-column: 1 /7;
+  grid-column: 7 / 13;
+}
+.req {
+  grid-column: 1 / 7;
 }
 .req-path {
-  grid-column: 1/5;
+  grid-column: 1 / 6;
+}
+.error-rate {
+  grid-column: 6 / 12;
+}
+.error-ranking {
+  grid-column: 1 / 6;
+}
+.avg-response {
+  grid-column: 6 / 13;
 }
 .font-varela {
   font-family: 'varela-round';

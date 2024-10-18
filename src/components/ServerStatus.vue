@@ -1,4 +1,18 @@
 <template>
+  <div class="summary">
+    <div class="map-badge">
+      <p class="space-right">Total Server :</p>
+      <Badge :value="totalServer" severity="secondary"></Badge>
+    </div>
+    <div class="map-badge">
+      <p class="space-right">Up :</p>
+      <Badge :value="upServer" severity="success"></Badge>
+    </div>
+    <div class="map-badge">
+      <p class="space-right">Down :</p>
+      <Badge :value="downServer" severity="danger"></Badge>
+    </div>
+  </div>
   <DataTable
     :value="server"
     class="p-datatable-sm"
@@ -30,11 +44,17 @@ import { ref, onMounted, watch, onBeforeUnmount } from 'vue'
 import 'primeicons/primeicons.css'
 
 const server = ref([])
+const totalServer = ref(0)
+const upServer = ref(0)
+const downServer = ref(0)
 const props = defineProps(['service'])
 const pollingInterval = 5000
 let pollingTimer = null
 
 async function fetchServerData() {
+  let up = 0
+  let down = 0
+  let total = 0
   try {
     let res = undefined
     if (!props.service || props.service === 'All') {
@@ -55,9 +75,17 @@ async function fetchServerData() {
     const data = res.data.map(d => {
       d.time = d.time.split('T')[1]
       d.time = d.time.split('.')[0]
+      if (d.status) {
+        up++
+      } else {
+        down++
+      }
       return d
     })
     server.value = data
+    totalServer.value = data.length
+    upServer.value = up
+    downServer.value = down
   } catch (e) {
     console.log(e)
   }
@@ -90,4 +118,16 @@ onBeforeUnmount(() => {
 })
 </script>
 
-<style></style>
+<style>
+.summary {
+  margin-bottom: 2em;
+}
+.map-badge {
+  display: flex;
+  align-items: center;
+}
+.space-right {
+  line-height: 0.1em;
+  margin-right: 1em;
+}
+</style>

@@ -10,6 +10,11 @@ import ServerStatus from './components/ServerStatus.vue'
 import CpuUsage from './components/CpuUsage.vue'
 import MemUsage from './components/MemUsage.vue'
 import RequestPath from './components/RequestPath.vue'
+import TotalRequest from './components/TotalRequest.vue'
+import ErrorToReq from './components/ErrorToReq.vue'
+import ErrorRanking from './components/ErrorRanking.vue'
+import ResponseDist from './components/ResponseDist.vue'
+import ResponseAvg from './components/ResponseAvg.vue'
 
 import App from './App.vue'
 import router from './router'
@@ -28,6 +33,7 @@ import ColumnGroup from 'primevue/columngroup' // optional
 import Row from 'primevue/row'
 import Calendar from 'primevue/calendar'
 import SelectButton from 'primevue/selectbutton'
+import Badge from 'primevue/badge'
 
 import Aura from '@primevue/themes/aura'
 import Lara from '@primevue/themes/lara'
@@ -56,6 +62,7 @@ app.component('ColumnGroup', ColumnGroup)
 app.component('Row', Row)
 app.component('Calendar', Calendar)
 app.component('SelectButton', SelectButton)
+app.component('Badge', Badge)
 
 app.component('SideBar', SideBar)
 app.component('FilterBar', FilterBar)
@@ -64,6 +71,11 @@ app.component('ServerStatus', ServerStatus)
 app.component('CpuUsage', CpuUsage)
 app.component('MemUsage', MemUsage)
 app.component('RequestPath', RequestPath)
+app.component('TotalRequest', TotalRequest)
+app.component('ErrorToReq', ErrorToReq)
+app.component('ErrorRanking', ErrorRanking)
+app.component('ResponseDist', ResponseDist)
+app.component('ResponseAvg', ResponseAvg)
 
 app.component('Chart', Chart)
 

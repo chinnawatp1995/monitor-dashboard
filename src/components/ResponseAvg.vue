@@ -1,6 +1,6 @@
 <template>
   <div class="head">
-    <h2>Memory Usage</h2>
+    <h2>Average Response Time</h2>
     <div class="filter">
       <Calendar id="start-24h" v-model="startTime" showTime hourFormat="24" />
       <i class="pi pi-arrow-right arrow" style="color: #708090"></i>
@@ -53,23 +53,29 @@ async function fetchCpuData() {
   try {
     let res = undefined
     if (!props.service || props.service === 'All') {
-      res = await axios.post('http://localhost:3010/monitor-server/mem-usage', {
-        startTime: startTime.value.toISOString(),
-        endTime: endTime.value.toISOString(),
-        resolution: resolution.value,
-      })
+      res = await axios.post(
+        'http://localhost:3010/monitor-server/avg-response',
+        {
+          startTime: startTime.value.toISOString(),
+          endTime: endTime.value.toISOString(),
+          resolution: resolution.value,
+        },
+      )
     } else {
       const machines = (
         await axios.get(
           `http://localhost:3010/monitor-server/machines?service=${props.service}`,
         )
       ).data
-      res = await axios.post('http://localhost:3010/monitor-server/mem-usage', {
-        startTime: startTime.value.toISOString(),
-        endTime: endTime.value.toISOString(),
-        resolution: resolution.value,
-        machineIds: [...machines],
-      })
+      res = await axios.post(
+        'http://localhost:3010/monitor-server/avg-response',
+        {
+          startTime: startTime.value.toISOString(),
+          endTime: endTime.value.toISOString(),
+          resolution: resolution.value,
+          machineIds: [...machines],
+        },
+      )
     }
     Object.entries(res.data).forEach(([k, v]) => {
       v = v.map(c => {
@@ -99,18 +105,16 @@ function updateChart() {
       }
       return
     }
-
     let ii = 0
     const labels = cpuData.value[keys[0]].map(d => d.bucket)
     const datasets = Object.entries(cpuData.value).map(([k, v]) => {
       return {
         label: k,
         fill: false,
-        borderColor: theme3[ii++ % theme2.length],
-        fill: true,
+        borderColor: theme3[ii++ % theme3.length],
         yAxisID: '%',
         tension: 0.4,
-        data: v.map(avg => avg.avg),
+        data: v.map(r => r.avg_response),
       }
     })
 
@@ -148,7 +152,7 @@ function setChartOptions() {
       y: {
         title: {
           display: true,
-          text: 'Mem Usage (%)',
+          text: 'total request',
         },
         min: 0,
         max: 100,

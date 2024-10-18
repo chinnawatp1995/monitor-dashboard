@@ -45,6 +45,7 @@ const setChartOptions = () => {
   return {
     plugins: {
       legend: {
+        position: 'right',
         labels: {
           usePointStyle: true,
           color: '', // Define the color for legend labels
