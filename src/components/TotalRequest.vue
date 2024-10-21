@@ -29,7 +29,7 @@ import axios from 'axios'
 import { subMonths } from 'date-fns'
 import { ref, onMounted, onBeforeUnmount, watch, defineProps } from 'vue'
 
-const cpuData = ref([])
+const totalReqData = ref([])
 const chartData = ref()
 const chartOptions = ref()
 
@@ -76,7 +76,7 @@ async function fetchCpuData() {
         c.bucket = c.bucket.split('.')[0]
       })
     })
-    cpuData.value = res.data
+    totalReqData.value = res.data
     return res.data
   } catch (e) {
     console.log(e)
@@ -85,12 +85,12 @@ async function fetchCpuData() {
 
 function updateChart() {
   try {
-    const keys = Object.keys(cpuData.value)
+    const keys = Object.keys(totalReqData.value)
 
     if (
       keys.length === 0 ||
-      !cpuData.value[keys[0]] ||
-      cpuData.value[keys[0]].length === 0
+      !totalReqData.value[keys[0]] ||
+      totalReqData.value[keys[0]].length === 0
     ) {
       chartData.value = {
         labels: [],
@@ -99,8 +99,8 @@ function updateChart() {
       return
     }
 
-    const labels = cpuData.value[keys[0]].map(d => d.bucket)
-    const datasets = Object.entries(cpuData.value).map(([k, v]) => {
+    const labels = totalReqData.value[keys[0]].map(d => d.bucket)
+    const datasets = Object.entries(totalReqData.value).map(([k, v]) => {
       return {
         label: k,
         fill: false,
@@ -182,7 +182,7 @@ watch(
 )
 
 watch(
-  () => cpuData.value,
+  () => totalReqData.value,
   () => {
     updateChart()
   },

@@ -12,7 +12,7 @@
 import axios from 'axios'
 import { defineProps, ref, onMounted, watch } from 'vue'
 
-const pathData = ref()
+const ErrorReqRatio = ref()
 const props = defineProps(['service'])
 
 const chartData = ref()
@@ -23,13 +23,16 @@ const fetchPathData = async () => {
     const res = await axios.get(
       `http://localhost:3010/monitor-server/error-req?service=${props.service}`,
     )
-    pathData.value = res.data
+    ErrorReqRatio.value = res.data
     // console.log(res.data)
     chartData.value = {
       labels: ['total errors', 'total requests'],
       datasets: [
         {
-          data: [pathData.value.total_errors, pathData.value.total_requests],
+          data: [
+            ErrorReqRatio.value.total_errors,
+            ErrorReqRatio.value.total_requests,
+          ],
           backgroundColor: '', // Define your background colors here
           hoverBackgroundColor: '', // Define hover background colors here
         },

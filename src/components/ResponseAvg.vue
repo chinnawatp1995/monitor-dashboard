@@ -30,7 +30,7 @@ import { subMonths } from 'date-fns'
 import { ref, onMounted, onBeforeUnmount, watch, defineProps } from 'vue'
 import { theme1, theme2, theme3 } from './color-palette/palette-1'
 
-const cpuData = ref([])
+const responseAvgData = ref([])
 const chartData = ref()
 const chartOptions = ref()
 
@@ -73,6 +73,7 @@ async function fetchCpuData() {
           startTime: startTime.value.toISOString(),
           endTime: endTime.value.toISOString(),
           resolution: resolution.value,
+          services: [props.service],
           machineIds: [...machines],
         },
       )
@@ -83,7 +84,7 @@ async function fetchCpuData() {
         c.bucket = c.bucket.split('.')[0]
       })
     })
-    cpuData.value = res.data
+    responseAvgData.value = res.data
     return res.data
   } catch (e) {
     console.log(e)
@@ -92,12 +93,12 @@ async function fetchCpuData() {
 
 function updateChart() {
   try {
-    const keys = Object.keys(cpuData.value)
+    const keys = Object.keys(responseAvgData.value)
 
     if (
       keys.length === 0 ||
-      !cpuData.value[keys[0]] ||
-      cpuData.value[keys[0]].length === 0
+      !responseAvgData.value[keys[0]] ||
+      responseAvgData.value[keys[0]].length === 0
     ) {
       chartData.value = {
         labels: [],
@@ -106,8 +107,8 @@ function updateChart() {
       return
     }
     let ii = 0
-    const labels = cpuData.value[keys[0]].map(d => d.bucket)
-    const datasets = Object.entries(cpuData.value).map(([k, v]) => {
+    const labels = responseAvgData.value[keys[0]].map(d => d.bucket)
+    const datasets = Object.entries(responseAvgData.value).map(([k, v]) => {
       return {
         label: k,
         fill: false,
@@ -189,7 +190,7 @@ watch(
 )
 
 watch(
-  () => cpuData.value,
+  () => responseAvgData.value,
   () => {
     updateChart()
   },

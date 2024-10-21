@@ -6,26 +6,26 @@
 <script setup>
 import axios from 'axios'
 import { defineProps, ref, onMounted, watch } from 'vue'
+import { red } from './color-palette/palette-1'
 
-const pathData = ref()
+const errorRanking = ref()
 const props = defineProps(['service'])
 
 const chartData = ref()
 const chartOptions = ref()
-
 const fetchPathData = async () => {
   try {
     const res = await axios.get(
       `http://localhost:3010/monitor-server/error-ranking?service=${props.service}`,
     )
-    pathData.value = res.data
+    errorRanking.value = res.data
     // console.log(res.data)
     chartData.value = {
-      labels: pathData.value.map(v => v.error_message),
+      labels: errorRanking.value.map(v => v.error_message),
       datasets: [
         {
-          data: pathData.value.map(v => v.error_count),
-          backgroundColor: '', // Define your background colors here
+          data: errorRanking.value.map(v => v.error_count),
+          backgroundColor: red.reverse(), // Define your background colors here
           hoverBackgroundColor: '', // Define hover background colors here
         },
       ],
