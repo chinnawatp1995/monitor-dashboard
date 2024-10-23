@@ -17,25 +17,45 @@
 
 <script setup>
 import axios from 'axios'
-import { onMounted } from 'vue'
+import { onMounted, onBeforeUnmount } from 'vue'
 import { ref } from 'vue'
 
 const selectedService = ref()
 const services = ref(['All'])
 const emit = defineEmits(['update-service'])
+const timerId = ref()
 
 function onServiceChange(service) {
   selectedService.value = service
   emit('update-service', service)
 }
 
+function startPolling() {
+  timerId.value = setInterval(async () => {
+    await fetchData()
+  }, 1_000 * 5)
+}
+
+function stopPolling() {
+  clearInterval(timerId.value)
+}
+
+async function fetchData() {
+  let res = await axios.get('http://localhost:3010/monitor-server/services')
+  services.value = ['All', ...res.data]
+}
+
 onMounted(async () => {
   try {
-    let res = await axios.get('http://localhost:3010/monitor-server/services')
-    services.value = [...services.value, ...res.data]
+    await fetchData()
+    startPolling()
   } catch (e) {
     console.log(e)
   }
+})
+
+onBeforeUnmount(() => {
+  stopPolling()
 })
 </script>
 
