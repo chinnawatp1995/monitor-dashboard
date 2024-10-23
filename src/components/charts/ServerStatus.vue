@@ -42,7 +42,7 @@
 import axios from 'axios'
 import { ref, onMounted, watch, onBeforeUnmount } from 'vue'
 import 'primeicons/primeicons.css'
-
+import { urls } from '../../urls'
 const server = ref([])
 const totalServer = ref(0)
 const upServer = ref(0)
@@ -54,23 +54,16 @@ let pollingTimer = null
 async function fetchServerData() {
   let up = 0
   let down = 0
-  let total = 0
   try {
     let res = undefined
     if (!props.service || props.service === 'All') {
-      res = await axios.post(
-        'http://localhost:3010/monitor-server/server-status',
-      )
+      res = await axios.post(urls.getServerStatus())
     } else {
-      const machines = (
-        await axios.get(
-          `http://localhost:3010/monitor-server/machines?service=${props.service}`,
-        )
-      ).data
-      res = await axios.post(
-        'http://localhost:3010/monitor-server/server-status',
-        { machineIds: [...machines] },
-      )
+      const machines = (await axios.get(urls.getMachines(props.service))).data
+
+      res = await axios.post(urls.getServerStatus(), {
+        machineIds: [...machines],
+      })
     }
     const data = res.data.map(d => {
       d.time = d.time.split('T')[1]

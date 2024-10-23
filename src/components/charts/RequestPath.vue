@@ -11,7 +11,7 @@
 <script setup>
 import axios from 'axios'
 import { defineProps, ref, onMounted, watch } from 'vue'
-
+import { urls } from '../../urls'
 const pathData = ref()
 const props = defineProps(['service'])
 
@@ -20,9 +20,7 @@ const chartOptions = ref()
 
 const fetchPathData = async () => {
   try {
-    const res = await axios.get(
-      `http://localhost:3010/monitor-server/path?service=${props.service}`,
-    )
+    const res = await axios.get(urls.getPaths(props.service))
     pathData.value = res.data
     // console.log(res.data)
     chartData.value = {

@@ -10,3 +10,12 @@ export const useCounterStore = defineStore('counter', () => {
 
   return { count, doubleCount, increment }
 })
+
+export const useFiltelterStore = defineStore('filter', () => {
+  const service = ref('All')
+  const start = ref('')
+  const end = ref('')
+  const resolution = ref('1 hour')
+
+  return { service, start, end, resolution }
+})

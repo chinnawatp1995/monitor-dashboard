@@ -28,7 +28,7 @@
 import axios from 'axios'
 import { subMonths } from 'date-fns'
 import { ref, onMounted, onBeforeUnmount, watch, defineProps } from 'vue'
-
+import { urls } from '../../urls'
 const totalReqData = ref([])
 const chartData = ref()
 const chartOptions = ref()
@@ -52,18 +52,14 @@ async function fetchCpuData() {
   try {
     let res = undefined
     if (!props.service || props.service === 'All') {
-      res = await axios.post('http://localhost:3010/monitor-server/request', {
+      res = await axios.post(urls.getTotalRequest(), {
         startTime: startTime.value.toISOString(),
         endTime: endTime.value.toISOString(),
         resolution: resolution.value,
       })
     } else {
-      const machines = (
-        await axios.get(
-          `http://localhost:3010/monitor-server/machines?service=${props.service}`,
-        )
-      ).data
-      res = await axios.post('http://localhost:3010/monitor-server/request', {
+      const machines = (await axios.get(urls.getMachines(props.service))).data
+      res = await axios.post(urls.getTotalRequest(), {
         startTime: startTime.value.toISOString(),
         endTime: endTime.value.toISOString(),
         resolution: resolution.value,

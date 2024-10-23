@@ -7,6 +7,7 @@
 import axios from 'axios'
 import { defineProps, ref, onMounted, watch } from 'vue'
 import { red } from '../../assets/color-palette/palette-1'
+import { urls } from '../../urls'
 
 const errorRanking = ref()
 const props = defineProps(['service'])
@@ -15,9 +16,7 @@ const chartData = ref()
 const chartOptions = ref()
 const fetchPathData = async () => {
   try {
-    const res = await axios.get(
-      `http://localhost:3010/monitor-server/error-ranking?service=${props.service}`,
-    )
+    const res = await axios.get(urls.getErrorRanking(props.service))
     errorRanking.value = res.data
     // console.log(res.data)
     chartData.value = {
