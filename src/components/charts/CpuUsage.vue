@@ -1,6 +1,6 @@
 <template>
   <div class="head">
-    <h2>Average Response Time</h2>
+    <h2>CPU Usage</h2>
     <div class="filter">
       <Calendar id="start-24h" v-model="startTime" showTime hourFormat="24" />
       <i class="pi pi-arrow-right arrow" style="color: #708090"></i>
@@ -20,7 +20,7 @@
     type="line"
     :data="chartData"
     :options="chartOptions"
-    class="h-[10 rem]"
+    class="h-[100 rem]"
   />
 </template>
 
@@ -28,9 +28,9 @@
 import axios from 'axios'
 import { subMonths } from 'date-fns'
 import { ref, onMounted, onBeforeUnmount, watch, defineProps } from 'vue'
-import { theme1, theme2, theme3 } from './color-palette/palette-1'
+import { theme1, theme2, theme3 } from '../../assets/color-palette/palette-1'
 
-const responseAvgData = ref([])
+const cpuData = ref([])
 const chartData = ref()
 const chartOptions = ref()
 
@@ -44,6 +44,8 @@ let pollingTimer = null
 
 const resolution = ref('1 hour')
 const options = ref([
+  { name: '1S', value: '1 second' },
+  { name: '1M', value: '1 minute' },
   { name: '1H', value: '1 hour' },
   { name: '1D', value: '1 week' },
   { name: '1W', value: '1 month' },
@@ -53,30 +55,23 @@ async function fetchCpuData() {
   try {
     let res = undefined
     if (!props.service || props.service === 'All') {
-      res = await axios.post(
-        'http://localhost:3010/monitor-server/avg-response',
-        {
-          startTime: startTime.value.toISOString(),
-          endTime: endTime.value.toISOString(),
-          resolution: resolution.value,
-        },
-      )
+      res = await axios.post('http://localhost:3010/monitor-server/cpu-usage', {
+        startTime: startTime.value.toISOString(),
+        endTime: endTime.value.toISOString(),
+        resolution: resolution.value,
+      })
     } else {
       const machines = (
         await axios.get(
           `http://localhost:3010/monitor-server/machines?service=${props.service}`,
         )
       ).data
-      res = await axios.post(
-        'http://localhost:3010/monitor-server/avg-response',
-        {
-          startTime: startTime.value.toISOString(),
-          endTime: endTime.value.toISOString(),
-          resolution: resolution.value,
-          services: [props.service],
-          machineIds: [...machines],
-        },
-      )
+      res = await axios.post('http://localhost:3010/monitor-server/cpu-usage', {
+        startTime: startTime.value.toISOString(),
+        endTime: endTime.value.toISOString(),
+        resolution: resolution.value,
+        machineIds: [...machines],
+      })
     }
     Object.entries(res.data).forEach(([k, v]) => {
       v = v.map(c => {
@@ -84,7 +79,7 @@ async function fetchCpuData() {
         c.bucket = c.bucket.split('.')[0]
       })
     })
-    responseAvgData.value = res.data
+    cpuData.value = res.data
     return res.data
   } catch (e) {
     console.log(e)
@@ -93,12 +88,12 @@ async function fetchCpuData() {
 
 function updateChart() {
   try {
-    const keys = Object.keys(responseAvgData.value)
+    const keys = Object.keys(cpuData.value)
 
     if (
       keys.length === 0 ||
-      !responseAvgData.value[keys[0]] ||
-      responseAvgData.value[keys[0]].length === 0
+      !cpuData.value[keys[0]] ||
+      cpuData.value[keys[0]].length === 0
     ) {
       chartData.value = {
         labels: [],
@@ -107,15 +102,17 @@ function updateChart() {
       return
     }
     let ii = 0
-    const labels = responseAvgData.value[keys[0]].map(d => d.bucket)
-    const datasets = Object.entries(responseAvgData.value).map(([k, v]) => {
+    const labels = cpuData.value[keys[0]].map(d => d.bucket)
+    const datasets = Object.entries(cpuData.value).map(([k, v]) => {
       return {
         label: k,
         fill: false,
         borderColor: theme3[ii++ % theme3.length],
+        fill: true,
+        // backgroundColor: theme3[ii++ % theme3.length],
         yAxisID: '%',
         tension: 0.4,
-        data: v.map(r => r.avg_response),
+        data: v.map(avg => avg.avg),
       }
     })
 
@@ -133,6 +130,7 @@ function setChartOptions() {
   chartOptions.value = {
     responsive: true,
     maintainAspectRatio: true,
+    animation: false, // Disable animation
     plugins: {
       legend: {
         display: true,
@@ -153,7 +151,7 @@ function setChartOptions() {
       y: {
         title: {
           display: true,
-          text: 'total request',
+          text: 'CPU Usage (%)',
         },
         min: 0,
         max: 100,
@@ -190,7 +188,7 @@ watch(
 )
 
 watch(
-  () => responseAvgData.value,
+  () => cpuData.value,
   () => {
     updateChart()
   },

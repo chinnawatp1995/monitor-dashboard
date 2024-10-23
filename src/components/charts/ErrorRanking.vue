@@ -6,7 +6,7 @@
 <script setup>
 import axios from 'axios'
 import { defineProps, ref, onMounted, watch } from 'vue'
-import { red } from './color-palette/palette-1'
+import { red } from '../../assets/color-palette/palette-1'
 
 const errorRanking = ref()
 const props = defineProps(['service'])

@@ -1,6 +1,6 @@
 <template>
   <div class="head">
-    <h2>Memory Usage</h2>
+    <h2>Average Response Time</h2>
     <div class="filter">
       <Calendar id="start-24h" v-model="startTime" showTime hourFormat="24" />
       <i class="pi pi-arrow-right arrow" style="color: #708090"></i>
@@ -28,9 +28,9 @@
 import axios from 'axios'
 import { subMonths } from 'date-fns'
 import { ref, onMounted, onBeforeUnmount, watch, defineProps } from 'vue'
-import { theme1, theme2, theme3 } from './color-palette/palette-1'
+import { theme1, theme2, theme3 } from '../../assets/color-palette/palette-1'
 
-const memData = ref([])
+const responseAvgData = ref([])
 const chartData = ref()
 const chartOptions = ref()
 
@@ -53,23 +53,30 @@ async function fetchCpuData() {
   try {
     let res = undefined
     if (!props.service || props.service === 'All') {
-      res = await axios.post('http://localhost:3010/monitor-server/mem-usage', {
-        startTime: startTime.value.toISOString(),
-        endTime: endTime.value.toISOString(),
-        resolution: resolution.value,
-      })
+      res = await axios.post(
+        'http://localhost:3010/monitor-server/avg-response',
+        {
+          startTime: startTime.value.toISOString(),
+          endTime: endTime.value.toISOString(),
+          resolution: resolution.value,
+        },
+      )
     } else {
       const machines = (
         await axios.get(
           `http://localhost:3010/monitor-server/machines?service=${props.service}`,
         )
       ).data
-      res = await axios.post('http://localhost:3010/monitor-server/mem-usage', {
-        startTime: startTime.value.toISOString(),
-        endTime: endTime.value.toISOString(),
-        resolution: resolution.value,
-        machineIds: [...machines],
-      })
+      res = await axios.post(
+        'http://localhost:3010/monitor-server/avg-response',
+        {
+          startTime: startTime.value.toISOString(),
+          endTime: endTime.value.toISOString(),
+          resolution: resolution.value,
+          services: [props.service],
+          machineIds: [...machines],
+        },
+      )
     }
     Object.entries(res.data).forEach(([k, v]) => {
       v = v.map(c => {
@@ -77,7 +84,7 @@ async function fetchCpuData() {
         c.bucket = c.bucket.split('.')[0]
       })
     })
-    memData.value = res.data
+    responseAvgData.value = res.data
     return res.data
   } catch (e) {
     console.log(e)
@@ -86,12 +93,12 @@ async function fetchCpuData() {
 
 function updateChart() {
   try {
-    const keys = Object.keys(memData.value)
+    const keys = Object.keys(responseAvgData.value)
 
     if (
       keys.length === 0 ||
-      !memData.value[keys[0]] ||
-      memData.value[keys[0]].length === 0
+      !responseAvgData.value[keys[0]] ||
+      responseAvgData.value[keys[0]].length === 0
     ) {
       chartData.value = {
         labels: [],
@@ -99,18 +106,16 @@ function updateChart() {
       }
       return
     }
-
     let ii = 0
-    const labels = memData.value[keys[0]].map(d => d.bucket)
-    const datasets = Object.entries(memData.value).map(([k, v]) => {
+    const labels = responseAvgData.value[keys[0]].map(d => d.bucket)
+    const datasets = Object.entries(responseAvgData.value).map(([k, v]) => {
       return {
         label: k,
         fill: false,
-        borderColor: theme3[ii++ % theme2.length],
-        fill: true,
+        borderColor: theme3[ii++ % theme3.length],
         yAxisID: '%',
         tension: 0.4,
-        data: v.map(avg => avg.avg),
+        data: v.map(r => r.avg_response),
       }
     })
 
@@ -148,7 +153,7 @@ function setChartOptions() {
       y: {
         title: {
           display: true,
-          text: 'Mem Usage (%)',
+          text: 'total request',
         },
         min: 0,
         max: 100,
@@ -185,7 +190,7 @@ watch(
 )
 
 watch(
-  () => memData.value,
+  () => responseAvgData.value,
   () => {
     updateChart()
   },

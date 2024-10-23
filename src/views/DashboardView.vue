@@ -36,10 +36,6 @@
 </template>
 
 <script setup>
-import ErrorToReq from '../components/ErrorToReq.vue'
-import ResponseAvg from '../components/ResponseAvg.vue'
-import TotalRequest from '../components/TotalRequest.vue'
-
 const props = defineProps(['selectedService'])
 </script>
 
