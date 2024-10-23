@@ -1,23 +1,6 @@
 import './assets/main.css'
-
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-
-import SideBar from './components/SideBar.vue'
-import FilterBar from './components/FilterBar.vue'
-import Header from './components/Header.vue'
-import ServerStatus from './components/charts/ServerStatus.vue'
-import CpuUsage from './components/charts/CpuUsage.vue'
-import MemUsage from './components/charts/MemUsage.vue'
-import RequestPath from './components/charts/RequestPath.vue'
-import TotalRequest from './components/charts/TotalRequest.vue'
-import ErrorToReq from './components/charts/ErrorToReq.vue'
-import ErrorRanking from './components/charts/ErrorRanking.vue'
-import ResponseDist from './components/charts/ResponseDist.vue'
-import ResponseAvg from './components/charts/ResponseAvg.vue'
-
-import App from './App.vue'
-import router from './router'
 
 import PrimeVue from 'primevue/config'
 import Sidebar from 'primevue/sidebar'
@@ -34,52 +17,84 @@ import Row from 'primevue/row'
 import Calendar from 'primevue/calendar'
 import SelectButton from 'primevue/selectbutton'
 import Badge from 'primevue/badge'
-
+import Chart from 'primevue/chart'
 import Aura from '@primevue/themes/aura'
 import Lara from '@primevue/themes/lara'
 
-import Chart from 'primevue/chart'
+import router from './router'
+import App from './App.vue'
+
+import {
+  SideBar,
+  FilterBar,
+  Header,
+  ServerStatus,
+  CpuUsage,
+  MemUsage,
+  RequestPath,
+  TotalRequest,
+  ErrorToReq,
+  ErrorRanking,
+  ResponseDist,
+  ResponseAvg,
+  ChartFilter,
+  ChartWrapper,
+} from './components'
 
 const app = createApp(App)
+
 app.use(PrimeVue, {
   theme: {
     preset: Lara,
-    options: {
-      darkModeSelector: false || 'none',
-    },
+    options: { darkModeSelector: false || 'none' },
   },
 })
-app.component('Sidebar', Sidebar)
-app.component('Button', Button)
-app.component('Menubar', Menubar)
-app.component('IconField', IconField)
-app.component('InputIcon', InputIcon)
-app.component('InputText', InputText)
-app.component('Dropdown', Dropdown)
-app.component('DataTable', DataTable)
-app.component('Column', Column)
-app.component('ColumnGroup', ColumnGroup)
-app.component('Row', Row)
-app.component('Calendar', Calendar)
-app.component('SelectButton', SelectButton)
-app.component('Badge', Badge)
 
-app.component('SideBar', SideBar)
-app.component('FilterBar', FilterBar)
-app.component('Header', Header)
-app.component('ServerStatus', ServerStatus)
-app.component('CpuUsage', CpuUsage)
-app.component('MemUsage', MemUsage)
-app.component('RequestPath', RequestPath)
-app.component('TotalRequest', TotalRequest)
-app.component('ErrorToReq', ErrorToReq)
-app.component('ErrorRanking', ErrorRanking)
-app.component('ResponseDist', ResponseDist)
-app.component('ResponseAvg', ResponseAvg)
+const primeComponents = {
+  Sidebar,
+  Button,
+  Menubar,
+  IconField,
+  InputIcon,
+  InputText,
+  Dropdown,
+  DataTable,
+  Column,
+  ColumnGroup,
+  Row,
+  Calendar,
+  SelectButton,
+  Badge,
+  Chart,
+}
 
-app.component('Chart', Chart)
+Object.entries(primeComponents).forEach(([name, component]) => {
+  app.component(name, component)
+})
+
+const customComponents = {
+  SideBar,
+  FilterBar,
+  Header,
+  ServerStatus,
+  CpuUsage,
+  MemUsage,
+  RequestPath,
+  TotalRequest,
+  ErrorToReq,
+  ErrorRanking,
+  ResponseDist,
+  ResponseAvg,
+  ChartFilter,
+  ChartWrapper,
+}
+
+Object.entries(customComponents).forEach(([name, component]) => {
+  app.component(name, component)
+})
 
 app.use(createPinia())
 app.use(router)
 
+// Mount app
 app.mount('#app')
