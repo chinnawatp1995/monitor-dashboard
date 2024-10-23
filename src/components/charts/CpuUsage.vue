@@ -46,7 +46,6 @@ const props = defineProps(['service'])
 
 const resolution = ref('1 hour')
 const options = ref([
-  { name: '1S', value: '1 second' },
   { name: '1M', value: '1 minute' },
   { name: '1H', value: '1 hour' },
   { name: '1D', value: '1 week' },
