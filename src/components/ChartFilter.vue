@@ -5,7 +5,7 @@
       v-model="startTime"
       showTime
       hourFormat="24"
-      @change="handleStartTimeChange"
+      @update:model-value="handleStartTimeChange"
     />
     <i class="pi pi-arrow-right arrow" style="color: #708090"></i>
     <Calendar
@@ -13,7 +13,7 @@
       v-model="endTime"
       showTime
       hourFormat="24"
-      @change="handleEndTimeChange"
+      @update:model-value="handleEndTimeChange"
     />
     <div class="resolution">
       <SelectButton
@@ -31,9 +31,12 @@
 <script setup>
 import { ref } from 'vue'
 
-const startTime = ref()
-const endTime = ref()
-const resolution = ref()
+const props = defineProps(['startTime', 'endTime', 'resolution'])
+
+const startTime = ref(props.startTime)
+const endTime = ref(props.endTime)
+const resolution = ref(props.resolution)
+
 const emit = defineEmits([
   'update:startTime',
   'update:endTime',
@@ -46,13 +49,35 @@ const options = ref([
   { name: '1D', value: '1 day' },
   { name: '1W', value: '1 week' },
 ])
-async function handleResolutionChange() {
+
+function handleResolutionChange() {
+  // console.log('handleResolutionChange', resolution.value)
   emit('update:resolution', resolution.value)
 }
-async function handleStartTimeChange() {
-  emit('update:startTime', startTime.value)
+
+function handleStartTimeChange() {
+  // console.log('handleStartTimeChange', startTime.value)
+  emit('update:startTime', startTime.value.toISOString())
 }
-async function handleEndTimeChange() {
-  emit('update:endTime', endTime.value)
+
+function handleEndTimeChange() {
+  // console.log('handleEndTimeChange', endTime.value)
+  emit('update:endTime', endTime.value.toISOString())
 }
 </script>
+
+<style scoped>
+.filter {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.arrow {
+  margin: 0 1em;
+}
+
+.resolution {
+  margin-top: 1em;
+}
+</style>
