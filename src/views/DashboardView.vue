@@ -1,54 +1,80 @@
 <template>
-  <div class="chart-wrapper server-status">
-    <h2 class="font-varela">Server status</h2>
-    <ServerStatus :service="props.selectedService"> </ServerStatus>
-  </div>
-  <div class="chart-wrapper cpu">
-    <CpuUsage :service="props.selectedService"></CpuUsage>
-  </div>
-  <div class="chart-wrapper req">
-    <TotalRequest :service="props.selectedService"></TotalRequest>
-  </div>
-  <div class="chart-wrapper mem">
-    <MemUsage :service="props.selectedService"></MemUsage>
-  </div>
-  <div
-    v-if="props.selectedService && props.selectedService !== 'All'"
-    class="chart-wrapper req-path"
-  >
-    <RequestPath :service="props.selectedService"></RequestPath>
-  </div>
-  <div class="chart-wrapper avg-response">
-    <ResponseAvg :service="props.selectedService"></ResponseAvg>
-  </div>
-  <div
-    v-if="props.selectedService && props.selectedService !== 'All'"
-    class="chart-wrapper error-ranking"
-  >
-    <ErrorRanking :service="props.selectedService"></ErrorRanking>
-  </div>
-  <div
-    v-if="props.selectedService && props.selectedService !== 'All'"
-    class="chart-wrapper error-rate"
-  >
-    <ErrorToReq :service="props.selectedService"></ErrorToReq>
+  <div>
+    <div class="filter-bar-wrapper">
+      <FilterBar @update-service="onUpdateSelectedService"></FilterBar>
+    </div>
+    <div class="page">
+      <div class="chart-wrapper server-status">
+        <h2 class="font-varela">Server status</h2>
+        <ServerStatus :service="selectedService"> </ServerStatus>
+      </div>
+      <div class="chart-wrapper cpu">
+        <CpuUsage :service="selectedService"></CpuUsage>
+      </div>
+      <div class="chart-wrapper req">
+        <TotalRequest :service="selectedService"></TotalRequest>
+      </div>
+      <div class="chart-wrapper mem">
+        <MemUsage :service="selectedService"></MemUsage>
+      </div>
+      <div
+        v-if="selectedService && selectedService !== 'All'"
+        class="chart-wrapper req-path"
+      >
+        <RequestPath :service="selectedService"></RequestPath>
+      </div>
+      <div class="chart-wrapper avg-response">
+        <ResponseAvg :service="selectedService"></ResponseAvg>
+      </div>
+      <div
+        v-if="selectedService && selectedService !== 'All'"
+        class="chart-wrapper error-ranking"
+      >
+        <ErrorRanking :service="selectedService"></ErrorRanking>
+      </div>
+      <div
+        v-if="selectedService && selectedService !== 'All'"
+        class="chart-wrapper error-rate"
+      >
+        <ErrorToReq :service="selectedService"></ErrorToReq>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-const props = defineProps(['selectedService'])
+import { ref } from 'vue'
+
+const selectedService = ref('All')
+const currentPage = ref('dashboard')
+
+function onUpdateSelectedService(service) {
+  selectedService.value = service
+}
 </script>
 
 <style>
+.filter-bar-wrapper {
+  display: flex;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  grid-row: 1 / 2;
+}
+.page {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-row: 2 / 3;
+  grid-auto-flow: row;
+  grid-auto-rows: min-content;
+  margin-top: 1em;
+  padding-right: 4em;
+}
 .chart-wrapper {
-  /* display: grid; */
-  /* grid-column: 1 / 7; */
   background-color: rgb(255, 255, 255);
   padding: 1em;
   border-radius: 1em;
   margin-top: 2em;
   margin-left: 2em;
-  /* border: 1px solid black; */
 }
 .server-status {
   grid-column: 1 / 6;
@@ -76,19 +102,5 @@ const props = defineProps(['selectedService'])
 }
 .font-varela {
   font-family: 'varela-round';
-}
-.a {
-  display: grid;
-  grid-column: 7/ 12;
-  height: 100px;
-}
-.b {
-  display: grid;
-  grid-column: 1 / 7;
-  height: 100px;
-}
-.c {
-  display: grid;
-  grid-column: 7 / 12;
 }
 </style>

@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import DashboardView from '../views/DashboardView.vue'
 import AnalyticsView from '../views/AnalyticsView.vue'
-import AlertManager from '../views/AlertManagerView.vue'
-import Setting from '../views/SettingView.vue'
+import AlertManagerView from '../views/AlertManagerView.vue'
+import SettingView from '../views/SettingView.vue'
 
 const defaultRoute = {
   path: '/',
@@ -26,12 +26,12 @@ const router = createRouter({
     {
       path: '/alert-manager',
       name: 'alert-manager',
-      component: AlertManager,
+      component: AlertManagerView,
     },
     {
       path: '/setting',
       name: 'setting',
-      component: Setting,
+      component: SettingView,
     },
   ],
 })

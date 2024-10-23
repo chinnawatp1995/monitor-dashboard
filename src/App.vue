@@ -1,46 +1,15 @@
-<script setup>
-import { ref } from 'vue'
-import DashboardView from './views/DashboardView.vue'
-
-const selectedService = ref('All')
-const currentPage = ref('dashboard')
-
-function onUpdateSelectedService(service) {
-  selectedService.value = service
-}
-
-function onChangePage(page) {
-  currentPage.value = page
-}
-</script>
+<script setup></script>
 
 <template>
   <div class="grid-container">
     <div class="side-bar-wrapper">
-      <SideBar @change-page="onChangePage"></SideBar>
+      <SideBar></SideBar>
     </div>
     <div class="main-content-wrapper">
       <div class="header-wrapper">
         <Header></Header>
       </div>
-      <div class="content-wrapper">
-        <div class="filter-bar-wrapper">
-          <FilterBar @update-service="onUpdateSelectedService"></FilterBar>
-        </div>
-        <div v-if="currentPage === 'dashboard'" class="page dashboard">
-          <!-- {{ currentPage }} -->
-          <DashboardView :selectedService="selectedService"></DashboardView>
-        </div>
-        <div v-else-if="currentPage === 'analytics'" class="page analytics">
-          {{ currentPage }}
-        </div>
-        <div v-else-if="currentPage === 'alert'" class="page alert">
-          {{ currentPage }}
-        </div>
-        <div v-else-if="currentPage === 'setting'" class="page setting">
-          {{ currentPage }}
-        </div>
-      </div>
+      <router-view></router-view>
     </div>
   </div>
 </template>
@@ -93,21 +62,5 @@ function onChangePage(page) {
   padding-right: 2em;
   padding-top: 1em;
   grid-template-rows: 5em 1fr;
-}
-
-.filter-bar-wrapper {
-  display: flex;
-  padding-top: 1em;
-  padding-bottom: 1em;
-  grid-row: 1 / 2;
-}
-
-.page {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-row: 2 / 3;
-  grid-auto-flow: row;
-  grid-auto-rows: min-content;
-  margin-top: 3em;
 }
 </style>

@@ -1,45 +1,25 @@
 <template>
   <div class="side-bar-header"></div>
   <div class="side-bar-menu">
-    <div
-      class="icon"
-      @click="
-        () => {
-          changePage('dashboard')
-        }
-      "
-    >
-      <i class="pi pi-chart-pie" style="color: #708090"></i>
+    <div class="icon">
+      <router-link to="/dashboard">
+        <i class="pi pi-chart-pie" style="color: #708090"></i>
+      </router-link>
     </div>
-    <div
-      class="icon"
-      @click="
-        () => {
-          changePage('analytics')
-        }
-      "
-    >
-      <i class="pi pi-chart-bar" style="color: #708090"></i>
+    <div class="icon">
+      <router-link to="/analytics">
+        <i class="pi pi-chart-bar" style="color: #708090"></i>
+      </router-link>
     </div>
-    <div
-      class="icon"
-      @click="
-        () => {
-          changePage('alert')
-        }
-      "
-    >
-      <i class="pi pi-exclamation-triangle" style="color: #708090"></i>
+    <div class="icon">
+      <router-link to="/alert-manager">
+        <i class="pi pi-exclamation-triangle" style="color: #708090"></i>
+      </router-link>
     </div>
-    <div
-      class="icon"
-      @click="
-        () => {
-          changePage('setting')
-        }
-      "
-    >
-      <i class="pi pi-cog" style="color: #708090"></i>
+    <div class="icon">
+      <router-link to="/setting">
+        <i class="pi pi-cog" style="color: #708090"></i>
+      </router-link>
     </div>
   </div>
 </template>
