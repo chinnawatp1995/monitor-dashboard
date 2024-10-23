@@ -20,7 +20,7 @@
     type="line"
     :data="chartData"
     :options="chartOptions"
-    class="h-[10 rem]"
+    class="h-[10rem]"
   />
 </template>
 
@@ -30,9 +30,14 @@ import { subMonths } from 'date-fns'
 import { ref, onMounted, onBeforeUnmount, watch, defineProps } from 'vue'
 import { theme1, theme2, theme3 } from '../../assets/color-palette/palette-1'
 import { urls } from '../../urls'
-const memData = ref([])
-const chartData = ref()
-const chartOptions = ref()
+import { useAxios } from '../../composables/useAxios'
+
+const memData = ref({})
+const chartData = ref({
+  labels: [],
+  datasets: [],
+})
+const chartOptions = ref({})
 
 const startTime = ref(subMonths(new Date(), 3))
 const endTime = ref(new Date())
@@ -44,40 +49,38 @@ let pollingTimer = null
 
 const resolution = ref('1 hour')
 const options = ref([
+  { name: '1M', value: '1 minute' },
   { name: '1H', value: '1 hour' },
   { name: '1D', value: '1 week' },
   { name: '1W', value: '1 month' },
 ])
 
-async function fetchCpuData() {
-  try {
-    let res = undefined
-    if (!props.service || props.service === 'All') {
-      res = await axios.post(urls.getMemUsage(), {
-        startTime: startTime.value.toISOString(),
-        endTime: endTime.value.toISOString(),
-        resolution: resolution.value,
-      })
-    } else {
-      const machines = (await axios.get(urls.getMachines(props.service))).data
-      res = await axios.post(urls.getMemUsage(), {
-        startTime: startTime.value.toISOString(),
-        endTime: endTime.value.toISOString(),
-        resolution: resolution.value,
-        machineIds: [...machines],
-      })
-    }
-    Object.entries(res.data).forEach(([k, v]) => {
-      v = v.map(c => {
-        // c.bucket = c.bucket.split('T')[1]
-        c.bucket = c.bucket.split('.')[0]
-      })
-    })
-    memData.value = res.data
-    return res.data
-  } catch (e) {
-    console.log(e)
+async function fetchMemData() {
+  const { data, error, axiosData } = useAxios(urls.getMemUsage(), 'post', {
+    startTime: startTime.value.toISOString(),
+    endTime: endTime.value.toISOString(),
+    resolution: resolution.value,
+    machineIds:
+      props.service !== 'All'
+        ? (await axios.get(urls.getMachines(props.service))).data
+        : undefined,
+  })
+
+  await axiosData()
+
+  if (error.value) {
+    console.error('Error fetching memory data:', error.value)
+    return
   }
+
+  Object.entries(data.value).forEach(([k, v]) => {
+    v.forEach(c => {
+      c.bucket = c.bucket.split('.')[0]
+    })
+  })
+
+  memData.value = data.value
+  updateChart()
 }
 
 function updateChart() {
@@ -102,9 +105,9 @@ function updateChart() {
       return {
         label: k,
         fill: false,
-        borderColor: theme3[ii++ % theme2.length],
+        borderColor: theme3[ii++ % theme3.length],
         fill: true,
-        yAxisID: '%',
+        yAxisID: 'y',
         tension: 0.4,
         data: v.map(avg => avg.avg),
       }
@@ -116,7 +119,7 @@ function updateChart() {
     }
     setChartOptions()
   } catch (e) {
-    console.log(e)
+    console.error('Error updating chart:', e)
   }
 }
 
@@ -124,6 +127,7 @@ function setChartOptions() {
   chartOptions.value = {
     responsive: true,
     maintainAspectRatio: true,
+    animation: false,
     plugins: {
       legend: {
         display: true,
@@ -154,74 +158,42 @@ function setChartOptions() {
 }
 
 function startPolling() {
-  pollingTimer = setInterval(async () => {
-    await fetchCpuData()
-    updateChart()
-  }, pollingInterval)
+  stopPolling() // Ensure any existing timer is cleared
+  pollingTimer = setInterval(fetchMemData, pollingInterval)
 }
 
 function stopPolling() {
   if (pollingTimer) {
     clearInterval(pollingTimer)
+    pollingTimer = null
   }
 }
 
-onMounted(async () => {
-  await fetchCpuData()
-  updateChart()
+watch(() => props.service, fetchMemData)
+watch(startTime, fetchMemData)
+watch(endTime, fetchMemData)
+watch(resolution, fetchMemData)
+watch(memData, updateChart)
+
+onMounted(() => {
+  fetchMemData()
   startPolling()
 })
-
-watch(
-  () => props.service,
-  async () => {
-    await fetchCpuData()
-    updateChart()
-  },
-)
-
-watch(
-  () => memData.value,
-  () => {
-    updateChart()
-  },
-)
-
-watch(
-  () => startTime.value,
-  () => {
-    fetchCpuData()
-  },
-)
-
-watch(
-  () => endTime.value,
-  () => {
-    fetchCpuData()
-  },
-)
-
-watch(
-  () => resolution.value,
-  newValue => {
-    fetchCpuData()
-    console.log(newValue)
-  },
-)
 
 onBeforeUnmount(() => {
   stopPolling()
 })
 </script>
 
-<style>
+<style scoped>
 .filter {
-  display: inline;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .arrow {
-  margin-left: 1em;
-  margin-right: 1em;
+  margin: 0 1em;
 }
 
 .resolution {
