@@ -1,26 +1,26 @@
 <template>
   <div class="side-bar-header"></div>
   <div class="side-bar-menu">
-    <div class="icon">
-      <router-link to="/dashboard">
+    <router-link to="/dashboard">
+      <div class="icon">
         <i class="pi pi-chart-pie" style="color: #708090"></i>
-      </router-link>
-    </div>
-    <div class="icon">
-      <router-link to="/analytics">
+      </div>
+    </router-link>
+    <router-link to="/analytics">
+      <div class="icon">
         <i class="pi pi-chart-bar" style="color: #708090"></i>
-      </router-link>
-    </div>
-    <div class="icon">
-      <router-link to="/alert-manager">
+      </div>
+    </router-link>
+    <router-link to="/alert-manager">
+      <div class="icon">
         <i class="pi pi-exclamation-triangle" style="color: #708090"></i>
-      </router-link>
-    </div>
-    <div class="icon">
-      <router-link to="/setting">
+      </div>
+    </router-link>
+    <router-link to="/setting">
+      <div class="icon">
         <i class="pi pi-cog" style="color: #708090"></i>
-      </router-link>
-    </div>
+      </div>
+    </router-link>
   </div>
 </template>
 
@@ -68,5 +68,9 @@ function changePage(p) {
   background-color: rgb(226, 226, 226);
   border-radius: 0.5em;
   /* border: 1px solid rgb(91, 111, 129); */
+}
+
+a {
+  text-decoration: none;
 }
 </style>
