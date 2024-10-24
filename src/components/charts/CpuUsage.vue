@@ -1,21 +1,4 @@
 <template>
-  <div class="head">
-    <h2>CPU Usage</h2>
-    <div class="filter">
-      <Calendar id="start-24h" v-model="startTime" showTime hourFormat="24" />
-      <i class="pi pi-arrow-right arrow" style="color: #708090"></i>
-      <Calendar id="end-24h" v-model="endTime" showTime hourFormat="24" />
-      <div class="resolution">
-        <SelectButton
-          v-model="resolution"
-          :options="options"
-          optionLabel="name"
-          optionValue="value"
-          aria-labelledby="multiple"
-        />
-      </div>
-    </div>
-  </div>
   <Chart
     type="line"
     :data="chartData"
@@ -26,7 +9,6 @@
 
 <script setup>
 import axios from 'axios'
-import { subMonths } from 'date-fns'
 import { ref, onMounted, onBeforeUnmount, watch, defineProps } from 'vue'
 import { theme1, theme2, theme3 } from '../../assets/color-palette/palette-1'
 import { urls } from '../../urls'
@@ -39,27 +21,16 @@ const chartData = ref({
 })
 const chartOptions = ref({})
 
-const startTime = ref(subMonths(new Date(), 1))
-const endTime = ref(new Date())
-
-const props = defineProps(['service'])
-
-const resolution = ref('1 hour')
-const options = ref([
-  { name: '1M', value: '1 minute' },
-  { name: '1H', value: '1 hour' },
-  { name: '1D', value: '1 week' },
-  { name: '1W', value: '1 month' },
-])
+const props = defineProps(['service', 'startTime', 'endTime', 'resolution'])
 
 const pollingInterval = 5000
 let pollingTimer = null
 
 const fetchCpuData = async () => {
   const { data, error, axiosData } = useAxios(urls.getCpuUsage(), 'post', {
-    startTime: startTime.value.toISOString(),
-    endTime: endTime.value.toISOString(),
-    resolution: resolution.value,
+    startTime: props.startTime,
+    endTime: props.endTime,
+    resolution: props.resolution,
     machineIds:
       props.service !== 'All'
         ? (await axios.get(urls.getMachines(props.service))).data
@@ -163,9 +134,9 @@ function stopPolling() {
 }
 
 watch(() => props.service, fetchCpuData)
-watch(startTime, fetchCpuData)
-watch(endTime, fetchCpuData)
-watch(resolution, fetchCpuData)
+watch(() => props.startTime, fetchCpuData)
+watch(() => props.endTime, fetchCpuData)
+watch(() => props.resolution, fetchCpuData)
 watch(cpuData, updateChart)
 onMounted(() => {
   fetchCpuData()
@@ -176,19 +147,3 @@ onBeforeUnmount(() => {
   stopPolling()
 })
 </script>
-
-<style scoped>
-.filter {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.arrow {
-  margin: 0 1em;
-}
-
-.resolution {
-  margin-top: 1em;
-}
-</style>

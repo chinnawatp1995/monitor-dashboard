@@ -9,13 +9,31 @@
         <ServerStatus :service="selectedService"> </ServerStatus>
       </div>
       <div class="chart-wrapper cpu">
-        <CpuUsage :service="selectedService"></CpuUsage>
+        <ChartWrapper title="CPU Usage" :withFilter="true">
+          <template v-slot="{ startTime, endTime, resolution }">
+            <CpuUsage
+              :service="selectedService"
+              :startTime="startTime"
+              :endTime="endTime"
+              :resolution="resolution"
+            ></CpuUsage>
+          </template>
+        </ChartWrapper>
       </div>
       <div class="chart-wrapper req">
         <TotalRequest :service="selectedService"></TotalRequest>
       </div>
       <div class="chart-wrapper mem">
-        <MemUsage :service="selectedService"></MemUsage>
+        <ChartWrapper title="Memory Usage" :withFilter="true">
+          <template v-slot="{ startTime, endTime, resolution }">
+            <MemUsage
+              :service="selectedService"
+              :startTime="startTime"
+              :endTime="endTime"
+              :resolution="resolution"
+            ></MemUsage>
+          </template>
+        </ChartWrapper>
       </div>
       <div
         v-if="selectedService && selectedService !== 'All'"

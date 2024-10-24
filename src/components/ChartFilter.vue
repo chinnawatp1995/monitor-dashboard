@@ -1,20 +1,22 @@
 <template>
   <div class="filter">
-    <Calendar
-      id="start-24h"
-      v-model="startTime"
-      showTime
-      hourFormat="24"
-      @update:model-value="handleStartTimeChange"
-    />
-    <i class="pi pi-arrow-right arrow" style="color: #708090"></i>
-    <Calendar
-      id="end-24h"
-      v-model="endTime"
-      showTime
-      hourFormat="24"
-      @update:model-value="handleEndTimeChange"
-    />
+    <div class="date-range">
+      <Calendar
+        id="start-24h"
+        v-model="startTime"
+        showTime
+        hourFormat="24"
+        @update:model-value="handleStartTimeChange"
+      />
+      <i class="pi pi-arrow-right arrow" style="color: #708090"></i>
+      <Calendar
+        id="end-24h"
+        v-model="endTime"
+        showTime
+        hourFormat="24"
+        @update:model-value="handleEndTimeChange"
+      />
+    </div>
     <div class="resolution">
       <SelectButton
         v-model="resolution"
@@ -44,7 +46,6 @@ const emit = defineEmits([
 ])
 
 const options = ref([
-  { name: '1M', value: '1 minute' },
   { name: '1H', value: '1 hour' },
   { name: '1D', value: '1 day' },
   { name: '1W', value: '1 week' },
@@ -68,6 +69,12 @@ function handleEndTimeChange() {
 
 <style scoped>
 .filter {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.date-range {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
