@@ -10,7 +10,6 @@
 <script setup>
 import axios from 'axios'
 import { ref, onMounted, onBeforeUnmount, watch, defineProps } from 'vue'
-import { theme1, theme2, theme3 } from '../../assets/color-palette/palette-1'
 import { urls } from '../../urls'
 import { useAxios } from '../../composables/useAxios'
 import { updateLineChart } from '../../utils/util-functions'
