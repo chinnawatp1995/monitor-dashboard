@@ -1,21 +1,4 @@
 <template>
-  <div class="head">
-    <h2>Total Request By Server</h2>
-    <div class="filter">
-      <Calendar id="start-24h" v-model="startTime" showTime hourFormat="24" />
-      <i class="pi pi-arrow-right arrow" style="color: #708090"></i>
-      <Calendar id="end-24h" v-model="endTime" showTime hourFormat="24" />
-      <div class="resolution">
-        <SelectButton
-          v-model="resolution"
-          :options="options"
-          optionLabel="name"
-          optionValue="value"
-          aria-labelledby="multiple"
-        />
-      </div>
-    </div>
-  </div>
   <Chart
     type="line"
     :data="chartData"
@@ -26,43 +9,33 @@
 
 <script setup>
 import axios from 'axios'
-import { subMonths } from 'date-fns'
 import { ref, onMounted, onBeforeUnmount, watch, defineProps } from 'vue'
 import { urls } from '../../urls'
+import { updateLineChart } from '../../utils/util-functions'
 const totalReqData = ref([])
 const chartData = ref()
 const chartOptions = ref()
 
-const startTime = ref(subMonths(new Date(), 3))
-const endTime = ref(new Date())
-
-const props = defineProps(['service'])
+const props = defineProps(['service', 'startTime', 'endTime', 'resolution'])
 
 const pollingInterval = 5000
 let pollingTimer = null
-
-const resolution = ref('1 hour')
-const options = ref([
-  { name: '1H', value: '1 hour' },
-  { name: '1D', value: '1 week' },
-  { name: '1W', value: '1 month' },
-])
 
 async function fetchCpuData() {
   try {
     let res = undefined
     if (!props.service || props.service === 'All') {
       res = await axios.post(urls.getTotalRequest(), {
-        startTime: startTime.value.toISOString(),
-        endTime: endTime.value.toISOString(),
-        resolution: resolution.value,
+        startTime: props.startTime,
+        endTime: props.endTime,
+        resolution: props.resolution,
       })
     } else {
       const machines = (await axios.get(urls.getMachines(props.service))).data
       res = await axios.post(urls.getTotalRequest(), {
-        startTime: startTime.value.toISOString(),
-        endTime: endTime.value.toISOString(),
-        resolution: resolution.value,
+        startTime: props.startTime,
+        endTime: props.endTime,
+        resolution: props.resolution,
         machineIds: [...machines],
       })
     }
@@ -79,75 +52,8 @@ async function fetchCpuData() {
   }
 }
 
-function updateChart() {
-  try {
-    const keys = Object.keys(totalReqData.value)
-
-    if (
-      keys.length === 0 ||
-      !totalReqData.value[keys[0]] ||
-      totalReqData.value[keys[0]].length === 0
-    ) {
-      chartData.value = {
-        labels: [],
-        datasets: [],
-      }
-      return
-    }
-
-    const labels = totalReqData.value[keys[0]].map(d => d.bucket)
-    const datasets = Object.entries(totalReqData.value).map(([k, v]) => {
-      return {
-        label: k,
-        fill: false,
-        borderColor: '#f22222',
-        yAxisID: '%',
-        tension: 0.4,
-        data: v.map(r => r.total_requests),
-      }
-    })
-
-    chartData.value = {
-      labels,
-      datasets,
-    }
-    setChartOptions()
-  } catch (e) {
-    console.log(e)
-  }
-}
-
-function setChartOptions() {
-  chartOptions.value = {
-    responsive: true,
-    maintainAspectRatio: true,
-    plugins: {
-      legend: {
-        display: true,
-        position: 'top',
-      },
-      tooltip: {
-        mode: 'index',
-        intersect: false,
-      },
-    },
-    scales: {
-      x: {
-        title: {
-          display: true,
-          text: 'Time (HH:MM:SS)',
-        },
-      },
-      y: {
-        title: {
-          display: true,
-          text: 'total request',
-        },
-        min: 0,
-        max: 100,
-      },
-    },
-  }
+const updateChart = () => {
+  updateLineChart(totalReqData, chartData, chartOptions, 'total_requests')
 }
 
 function startPolling() {
@@ -185,21 +91,21 @@ watch(
 )
 
 watch(
-  () => startTime.value,
+  () => props.startTime,
   () => {
     fetchCpuData()
   },
 )
 
 watch(
-  () => endTime.value,
+  () => props.endTime,
   () => {
     fetchCpuData()
   },
 )
 
 watch(
-  () => resolution.value,
+  () => props.resolution,
   newValue => {
     fetchCpuData()
     console.log(newValue)

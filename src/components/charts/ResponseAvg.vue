@@ -1,21 +1,4 @@
 <template>
-  <div class="head">
-    <h2>Average Response Time</h2>
-    <div class="filter">
-      <Calendar id="start-24h" v-model="startTime" showTime hourFormat="24" />
-      <i class="pi pi-arrow-right arrow" style="color: #708090"></i>
-      <Calendar id="end-24h" v-model="endTime" showTime hourFormat="24" />
-      <div class="resolution">
-        <SelectButton
-          v-model="resolution"
-          :options="options"
-          optionLabel="name"
-          optionValue="value"
-          aria-labelledby="multiple"
-        />
-      </div>
-    </div>
-  </div>
   <Chart
     type="line"
     :data="chartData"
@@ -26,135 +9,56 @@
 
 <script setup>
 import axios from 'axios'
-import { subMonths } from 'date-fns'
 import { ref, onMounted, onBeforeUnmount, watch, defineProps } from 'vue'
-import { theme1, theme2, theme3 } from '../../assets/color-palette/palette-1'
 import { urls } from '../../urls'
-const responseAvgData = ref([])
+import { updateLineChart } from '../../utils/util-functions'
+const responseAvgData = ref()
 const chartData = ref()
 const chartOptions = ref()
 
-const startTime = ref(subMonths(new Date(), 3))
-const endTime = ref(new Date())
-
-const props = defineProps(['service'])
+const props = defineProps(['service', 'startTime', 'endTime', 'resolution'])
 
 const pollingInterval = 5000
 let pollingTimer = null
 
-const resolution = ref('1 hour')
-const options = ref([
-  { name: '1H', value: '1 hour' },
-  { name: '1D', value: '1 week' },
-  { name: '1W', value: '1 month' },
-])
-
-async function fetchCpuData() {
+async function fetchResponseData() {
   try {
     let res = undefined
     if (!props.service || props.service === 'All') {
       res = await axios.post(urls.getAvgResponse(), {
-        startTime: startTime.value.toISOString(),
-        endTime: endTime.value.toISOString(),
-        resolution: resolution.value,
+        startTime: props.startTime,
+        endTime: props.endTime,
+        resolution: props.resolution,
       })
     } else {
       const machines = (await axios.get(urls.getMachines(props.service))).data
       res = await axios.post(urls.getAvgResponse(), {
-        startTime: startTime.value.toISOString(),
-        endTime: endTime.value.toISOString(),
-        resolution: resolution.value,
+        startTime: props.startTime,
+        endTime: props.endTime,
+        resolution: props.resolution,
         services: [props.service],
         machineIds: [...machines],
       })
     }
     Object.entries(res.data).forEach(([k, v]) => {
-      v = v.map(c => {
-        // c.bucket = c.bucket.split('T')[1]
+      v.forEach(c => {
         c.bucket = c.bucket.split('.')[0]
       })
     })
     responseAvgData.value = res.data
     return res.data
   } catch (e) {
-    console.log(e)
+    console.error('Error fetching response data:', e)
   }
 }
 
-function updateChart() {
-  try {
-    const keys = Object.keys(responseAvgData.value)
-
-    if (
-      keys.length === 0 ||
-      !responseAvgData.value[keys[0]] ||
-      responseAvgData.value[keys[0]].length === 0
-    ) {
-      chartData.value = {
-        labels: [],
-        datasets: [],
-      }
-      return
-    }
-    let ii = 0
-    const labels = responseAvgData.value[keys[0]].map(d => d.bucket)
-    const datasets = Object.entries(responseAvgData.value).map(([k, v]) => {
-      return {
-        label: k,
-        fill: false,
-        borderColor: theme3[ii++ % theme3.length],
-        yAxisID: '%',
-        tension: 0.4,
-        data: v.map(r => r.avg_response),
-      }
-    })
-
-    chartData.value = {
-      labels,
-      datasets,
-    }
-    setChartOptions()
-  } catch (e) {
-    console.log(e)
-  }
-}
-
-function setChartOptions() {
-  chartOptions.value = {
-    responsive: true,
-    maintainAspectRatio: true,
-    plugins: {
-      legend: {
-        display: true,
-        position: 'top',
-      },
-      tooltip: {
-        mode: 'index',
-        intersect: false,
-      },
-    },
-    scales: {
-      x: {
-        title: {
-          display: true,
-          text: 'Time (HH:MM:SS)',
-        },
-      },
-      y: {
-        title: {
-          display: true,
-          text: 'total request',
-        },
-        min: 0,
-        max: 100,
-      },
-    },
-  }
+const updateChart = () => {
+  updateLineChart(responseAvgData, chartData, chartOptions)
 }
 
 function startPolling() {
   pollingTimer = setInterval(async () => {
-    await fetchCpuData()
+    await fetchResponseData()
     updateChart()
   }, pollingInterval)
 }
@@ -166,7 +70,7 @@ function stopPolling() {
 }
 
 onMounted(async () => {
-  await fetchCpuData()
+  await fetchResponseData()
   updateChart()
   startPolling()
 })
@@ -174,7 +78,7 @@ onMounted(async () => {
 watch(
   () => props.service,
   async () => {
-    await fetchCpuData()
+    await fetchResponseData()
     updateChart()
   },
 )
@@ -187,24 +91,10 @@ watch(
 )
 
 watch(
-  () => startTime.value,
-  () => {
-    fetchCpuData()
-  },
-)
-
-watch(
-  () => endTime.value,
-  () => {
-    fetchCpuData()
-  },
-)
-
-watch(
-  () => resolution.value,
-  newValue => {
-    fetchCpuData()
-    console.log(newValue)
+  [() => props.startTime, () => props.endTime, () => props.resolution],
+  async () => {
+    await fetchResponseData()
+    updateChart()
   },
 )
 

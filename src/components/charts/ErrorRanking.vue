@@ -1,5 +1,4 @@
 <template>
-  <h2>Error Reason Ranking</h2>
   <Chart type="bar" :data="chartData" :options="chartOptions" />
 </template>
 

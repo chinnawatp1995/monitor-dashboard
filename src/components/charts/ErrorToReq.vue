@@ -1,5 +1,4 @@
 <template>
-  <h2>Error Rate</h2>
   <Chart
     type="pie"
     :data="chartData"

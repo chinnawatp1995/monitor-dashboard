@@ -1,6 +1,11 @@
 import { theme1, theme2, theme3 } from '../assets/color-palette/palette-1'
 
-export function updateLineChart(dataRef, chartData, chartOptions) {
+export function updateLineChart(
+  dataRef,
+  chartData,
+  chartOptions,
+  field = 'avg',
+) {
   try {
     const keys = Object.keys(dataRef.value)
 
@@ -25,7 +30,7 @@ export function updateLineChart(dataRef, chartData, chartOptions) {
         fill: true,
         yAxisID: 'y',
         tension: 0.4,
-        data: v.map(avg => avg.avg),
+        data: v.map(avg => avg[field]),
       }
     })
 

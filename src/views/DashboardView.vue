@@ -5,8 +5,9 @@
     </div>
     <div class="page">
       <div class="chart-wrapper server-status">
-        <h2 class="font-varela">Server status</h2>
-        <ServerStatus :service="selectedService"> </ServerStatus>
+        <ChartWrapper title="Server status" :withFilter="false">
+          <ServerStatus :service="selectedService"></ServerStatus>
+        </ChartWrapper>
       </div>
       <div class="chart-wrapper cpu">
         <ChartWrapper title="CPU Usage" :withFilter="true">
@@ -21,7 +22,16 @@
         </ChartWrapper>
       </div>
       <div class="chart-wrapper req">
-        <TotalRequest :service="selectedService"></TotalRequest>
+        <ChartWrapper title="Total Request By Server" :withFilter="true">
+          <template v-slot="{ startTime, endTime, resolution }">
+            <TotalRequest
+              :service="selectedService"
+              :startTime="startTime"
+              :endTime="endTime"
+              :resolution="resolution"
+            ></TotalRequest>
+          </template>
+        </ChartWrapper>
       </div>
       <div class="chart-wrapper mem">
         <ChartWrapper title="Memory Usage" :withFilter="true">
@@ -39,22 +49,58 @@
         v-if="selectedService && selectedService !== 'All'"
         class="chart-wrapper req-path"
       >
-        <RequestPath :service="selectedService"></RequestPath>
+        <ChartWrapper title="Request Path" :withFilter="true">
+          <template v-slot="{ startTime, endTime, resolution }">
+            <RequestPath
+              :service="selectedService"
+              :startTime="startTime"
+              :endTime="endTime"
+              :resolution="resolution"
+            ></RequestPath>
+          </template>
+        </ChartWrapper>
       </div>
       <div class="chart-wrapper avg-response">
-        <ResponseAvg :service="selectedService"></ResponseAvg>
+        <ChartWrapper title="Average Response Time" :withFilter="true">
+          <template v-slot="{ startTime, endTime, resolution }">
+            <ResponseAvg
+              :service="selectedService"
+              :startTime="startTime"
+              :endTime="endTime"
+              :resolution="resolution"
+            ></ResponseAvg>
+          </template>
+        </ChartWrapper>
       </div>
       <div
         v-if="selectedService && selectedService !== 'All'"
         class="chart-wrapper error-ranking"
       >
-        <ErrorRanking :service="selectedService"></ErrorRanking>
+        <ChartWrapper title="Error Ranking" :withFilter="false">
+          <template v-slot="{ startTime, endTime, resolution }">
+            <ErrorRanking
+              :service="selectedService"
+              :startTime="startTime"
+              :endTime="endTime"
+              :resolution="resolution"
+            ></ErrorRanking>
+          </template>
+        </ChartWrapper>
       </div>
       <div
         v-if="selectedService && selectedService !== 'All'"
         class="chart-wrapper error-rate"
       >
-        <ErrorToReq :service="selectedService"></ErrorToReq>
+        <ChartWrapper title="Error Rate" :withFilter="false">
+          <template v-slot="{ startTime, endTime, resolution }">
+            <ErrorToReq
+              :service="selectedService"
+              :startTime="startTime"
+              :endTime="endTime"
+              :resolution="resolution"
+            ></ErrorToReq>
+          </template>
+        </ChartWrapper>
       </div>
     </div>
   </div>
