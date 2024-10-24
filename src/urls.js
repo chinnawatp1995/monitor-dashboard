@@ -13,4 +13,6 @@ export const urls = {
   getPaths: service => `${SERVER_URL}/path?service=${service}`,
   getErrorRate: service => `${SERVER_URL}/error-req?service=${service}`,
   getErrorRanking: service => `${SERVER_URL}/error-ranking?service=${service}`,
+  getRxNetworkUsage: () => `${SERVER_URL}/rx-network-usage`,
+  getTxNetworkUsage: () => `${SERVER_URL}/tx-network-usage`,
 }

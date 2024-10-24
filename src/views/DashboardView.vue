@@ -102,6 +102,30 @@
           </template>
         </ChartWrapper>
       </div>
+      <div class="chart-wrapper rx-network-usage">
+        <ChartWrapper title="Rx Network Usage" :withFilter="true">
+          <template v-slot="{ startTime, endTime, resolution }">
+            <RxNetworkUsage
+              :service="selectedService"
+              :startTime="startTime"
+              :endTime="endTime"
+              :resolution="resolution"
+            ></RxNetworkUsage>
+          </template>
+        </ChartWrapper>
+      </div>
+      <div class="chart-wrapper tx-network-usage">
+        <ChartWrapper title="Tx Network Usage" :withFilter="true">
+          <template v-slot="{ startTime, endTime, resolution }">
+            <TxNetworkUsage
+              :service="selectedService"
+              :startTime="startTime"
+              :endTime="endTime"
+              :resolution="resolution"
+            ></TxNetworkUsage>
+          </template>
+        </ChartWrapper>
+      </div>
     </div>
   </div>
 </template>
@@ -147,6 +171,12 @@ function onUpdateSelectedService(service) {
   grid-column: 6 / 13;
 }
 .mem {
+  grid-column: 7 / 13;
+}
+.rx-network-usage {
+  grid-column: 1 / 7;
+}
+.tx-network-usage {
   grid-column: 7 / 13;
 }
 .req {

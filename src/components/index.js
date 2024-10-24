@@ -12,6 +12,8 @@ import ResponseDist from './charts/ResponseDist.vue'
 import ResponseAvg from './charts/ResponseAvg.vue'
 import ChartFilter from './ChartFilter.vue'
 import ChartWrapper from './ChartWrapper.vue'
+import RxNetworkUsage from './charts/RxNetworkUsage.vue'
+import TxNetworkUsage from './charts/TxNetworkUsage.vue'
 
 export {
   SideBar,
@@ -28,4 +30,6 @@ export {
   ResponseAvg,
   ChartFilter,
   ChartWrapper,
+  RxNetworkUsage,
+  TxNetworkUsage,
 }
