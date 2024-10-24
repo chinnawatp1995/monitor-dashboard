@@ -13,7 +13,7 @@ import { ref, onMounted, onBeforeUnmount, watch, defineProps } from 'vue'
 import { theme1, theme2, theme3 } from '../../assets/color-palette/palette-1'
 import { urls } from '../../urls'
 import { useAxios } from '../../composables/useAxios'
-
+import { updateLineChart } from '../../utils/util-functions'
 const memData = ref({})
 const chartData = ref({
   labels: [],
@@ -54,82 +54,12 @@ async function fetchMemData() {
   updateChart()
 }
 
-function updateChart() {
-  try {
-    const keys = Object.keys(memData.value)
-
-    if (
-      keys.length === 0 ||
-      !memData.value[keys[0]] ||
-      memData.value[keys[0]].length === 0
-    ) {
-      chartData.value = {
-        labels: [],
-        datasets: [],
-      }
-      return
-    }
-
-    let ii = 0
-    const labels = memData.value[keys[0]].map(d => d.bucket)
-    const datasets = Object.entries(memData.value).map(([k, v]) => {
-      return {
-        label: k,
-        fill: false,
-        borderColor: theme3[ii++ % theme3.length],
-        fill: true,
-        yAxisID: 'y',
-        tension: 0.4,
-        data: v.map(avg => avg.avg),
-      }
-    })
-
-    chartData.value = {
-      labels,
-      datasets,
-    }
-    setChartOptions()
-  } catch (e) {
-    console.error('Error updating chart:', e)
-  }
-}
-
-function setChartOptions() {
-  chartOptions.value = {
-    responsive: true,
-    maintainAspectRatio: true,
-    animation: false,
-    plugins: {
-      legend: {
-        display: true,
-        position: 'top',
-      },
-      tooltip: {
-        mode: 'index',
-        intersect: false,
-      },
-    },
-    scales: {
-      x: {
-        title: {
-          display: true,
-          text: 'Time (HH:MM:SS)',
-        },
-      },
-      y: {
-        title: {
-          display: true,
-          text: 'Mem Usage (%)',
-        },
-        min: 0,
-        max: 100,
-      },
-    },
-  }
+const updateChart = () => {
+  updateLineChart(memData, chartData, chartOptions)
 }
 
 function startPolling() {
-  stopPolling() // Ensure any existing timer is cleared
+  stopPolling()
   pollingTimer = setInterval(fetchMemData, pollingInterval)
 }
 
