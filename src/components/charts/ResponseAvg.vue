@@ -53,7 +53,14 @@ async function fetchResponseData() {
 }
 
 const updateChart = () => {
-  updateLineChart(responseAvgData, chartData, chartOptions)
+  updateLineChart(
+    responseAvgData,
+    chartData,
+    chartOptions,
+    'avg',
+    'time',
+    'Response Time (ms)',
+  )
 }
 
 function startPolling() {

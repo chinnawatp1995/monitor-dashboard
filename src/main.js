@@ -20,7 +20,7 @@ import Badge from 'primevue/badge'
 import Chart from 'primevue/chart'
 import Aura from '@primevue/themes/aura'
 import Lara from '@primevue/themes/lara'
-
+import Dialog from 'primevue/dialog'
 import router from './router'
 import App from './App.vue'
 
@@ -39,6 +39,8 @@ import {
   ResponseAvg,
   ChartFilter,
   ChartWrapper,
+  RxNetworkUsage,
+  TxNetworkUsage,
 } from './components'
 
 const app = createApp(App)
@@ -66,6 +68,7 @@ const primeComponents = {
   SelectButton,
   Badge,
   Chart,
+  Dialog,
 }
 
 Object.entries(primeComponents).forEach(([name, component]) => {
@@ -87,6 +90,8 @@ const customComponents = {
   ResponseAvg,
   ChartFilter,
   ChartWrapper,
+  RxNetworkUsage,
+  TxNetworkUsage,
 }
 
 Object.entries(customComponents).forEach(([name, component]) => {

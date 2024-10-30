@@ -54,7 +54,14 @@ async function fetchMemData() {
 }
 
 const updateChart = () => {
-  updateLineChart(memData, chartData, chartOptions)
+  updateLineChart(
+    memData,
+    chartData,
+    chartOptions,
+    'avg',
+    'time',
+    'Memory Usage (%)',
+  )
 }
 
 function startPolling() {

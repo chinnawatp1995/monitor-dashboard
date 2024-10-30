@@ -54,7 +54,14 @@ const fetchNetworkData = async () => {
 }
 
 const updateChart = () => {
-  updateLineChart(networkData, chartData, chartOptions)
+  updateLineChart(
+    networkData,
+    chartData,
+    chartOptions,
+    'avg',
+    'time',
+    'Rx Network Usage (bytes)',
+  )
 }
 
 function startPolling() {

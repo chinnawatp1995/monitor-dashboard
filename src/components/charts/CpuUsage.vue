@@ -12,8 +12,7 @@ import axios from 'axios'
 import { ref, onMounted, onBeforeUnmount, watch, defineProps } from 'vue'
 import { urls } from '../../urls'
 import { useAxios } from '../../composables/useAxios'
-import { updateLineChart } from '../../utils/util-functions'
-
+import { updateLineChart, convertTimeZone } from '../../utils/util-functions'
 const cpuData = ref({})
 const chartData = ref({
   labels: [],
@@ -45,11 +44,21 @@ const fetchCpuData = async () => {
   }
 
   cpuData.value = data.value
+  cpuData.value.forEach(item => {
+    item.time = convertTimeZone(item.time, 'Asia/Bangkok')
+  })
   updateChart()
 }
 
 const updateChart = () => {
-  updateLineChart(cpuData, chartData, chartOptions)
+  updateLineChart(
+    cpuData,
+    chartData,
+    chartOptions,
+    'avg',
+    'time',
+    'CPU Usage (%)',
+  )
 }
 
 function startPolling() {
