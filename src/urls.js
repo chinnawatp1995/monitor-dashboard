@@ -15,6 +15,7 @@ export const urls = {
   getErrorRanking: service => `${SERVER_URL}/error-ranking?service=${service}`,
   getRxNetworkUsage: () => `${SERVER_URL}/rx-network-usage`,
   getTxNetworkUsage: () => `${SERVER_URL}/tx-network-usage`,
+  getAlertRules: () => `${SERVER_URL}/alert-rules`,
   createAlertRule: () => `${SERVER_URL}/create-alert`,
   createRecipient: () => `${SERVER_URL}/create-recipient`,
   addRecipient: () => `${SERVER_URL}/add-recipient`,
