@@ -21,6 +21,15 @@ import Chart from 'primevue/chart'
 import Aura from '@primevue/themes/aura'
 import Lara from '@primevue/themes/lara'
 import Dialog from 'primevue/dialog'
+import Card from 'primevue/card'
+import FloatLabel from 'primevue/floatlabel'
+import InputGroup from 'primevue/inputgroup'
+import ToggleSwitch from 'primevue/toggleswitch'
+import MultiSelect from 'primevue/multiselect'
+import Toast from 'primevue/toast'
+import ScrollTop from 'primevue/scrolltop'
+import Textarea from 'primevue/textarea'
+
 import router from './router'
 import App from './App.vue'
 
@@ -41,6 +50,7 @@ import {
   ChartWrapper,
   RxNetworkUsage,
   TxNetworkUsage,
+  CreateAlertRuleForm,
 } from './components'
 
 const app = createApp(App)
@@ -69,6 +79,14 @@ const primeComponents = {
   Badge,
   Chart,
   Dialog,
+  Card,
+  FloatLabel,
+  MultiSelect,
+  ToggleSwitch,
+  InputGroup,
+  Toast,
+  ScrollTop,
+  Textarea,
 }
 
 Object.entries(primeComponents).forEach(([name, component]) => {
@@ -92,6 +110,7 @@ const customComponents = {
   ChartWrapper,
   RxNetworkUsage,
   TxNetworkUsage,
+  CreateAlertRuleForm,
 }
 
 Object.entries(customComponents).forEach(([name, component]) => {

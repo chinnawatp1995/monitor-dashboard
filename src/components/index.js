@@ -14,7 +14,8 @@ import ChartFilter from './ChartFilter.vue'
 import ChartWrapper from './ChartWrapper.vue'
 import RxNetworkUsage from './charts/RxNetworkUsage.vue'
 import TxNetworkUsage from './charts/TxNetworkUsage.vue'
-
+import CreateAlertRuleForm from './forms/CreateAlertRuleForm.vue'
+import AlertRuleCard from './AlertRuleCard.vue'
 export {
   SideBar,
   FilterBar,
@@ -32,4 +33,6 @@ export {
   ChartWrapper,
   RxNetworkUsage,
   TxNetworkUsage,
+  CreateAlertRuleForm,
+  AlertRuleCard,
 }
