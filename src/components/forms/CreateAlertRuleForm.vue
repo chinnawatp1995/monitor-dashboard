@@ -2,23 +2,30 @@
   <div class="form-wrapper">
     <h3>Create Alert Rule</h3>
     <div class="form-field">
-      <label style="font-size: 0.75rem" for="name">Name</label>
-      <InputText id="name" v-model="name" />
+      <FloatLabel variant="on">
+        <InputText id="name" v-model="name" />
+        <label for="name">Name</label>
+      </FloatLabel>
     </div>
     <div class="form-field">
-      <label style="font-size: 0.75rem" for="expression">Expression</label>
-      <InputText id="expression" v-model="expression" />
+      <FloatLabel variant="on">
+        <InputText id="expression" v-model="expression" />
+        <label for="expression">Expression</label>
+      </FloatLabel>
     </div>
     <div class="form-field">
-      <label style="font-size: 0.75rem" for="duration">Duration</label>
-      <InputText id="duration" v-model="duration" />
+      <FloatLabel variant="on">
+        <InputText id="duration" v-model="duration" />
+        <label for="duration">Duration</label>
+      </FloatLabel>
     </div>
     <div class="form-field">
-      <label style="font-size: 0.75rem" for="silenceTime">Silence Time</label>
-      <InputText id="silenceTime" v-model="silenceTime" />
+      <FloatLabel variant="on">
+        <InputText id="silenceTime" v-model="silenceTime" />
+        <label for="silenceTime">Silence Time</label>
+      </FloatLabel>
     </div>
     <div class="form-field">
-      <label style="font-size: 0.75rem" for="severity">Severity</label>
       <Dropdown
         id="severity"
         v-model="severity"
@@ -27,15 +34,17 @@
       />
     </div>
     <div class="form-field">
-      <label style="font-size: 0.75rem" for="templateMessage">Message</label>
-      <Textarea
-        id="templateMessage"
-        v-model="templateMessage"
-        rows="4"
-        autoResize
-      />
+      <FloatLabel variant="on">
+        <Textarea
+          id="templateMessage"
+          v-model="templateMessage"
+          rows="4"
+          autoResize
+        />
+        <label for="templateMessage">Message</label>
+      </FloatLabel>
     </div>
-    <Button label="Create" @click="createAlertRule" />
+    <Button label="Create" @click="createAlertRule" icon="pi pi-save" />
   </div>
 </template>
 
@@ -49,7 +58,9 @@ const duration = ref('')
 const silenceTime = ref('')
 const name = ref('')
 const severity = ref('')
-const templateMessage = ref('aaa')
+const templateMessage = ref('')
+
+const emit = defineEmits(['create:rule'])
 
 const createAlertRule = async () => {
   try {
@@ -61,6 +72,7 @@ const createAlertRule = async () => {
       severity: severity.value,
       message: templateMessage.value,
     })
+    emit('create:rule', res.data)
     expression.value = ''
     duration.value = ''
     silenceTime.value = ''

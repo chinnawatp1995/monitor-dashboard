@@ -21,6 +21,22 @@ async function enableRule(ruleId) {
   await axios.get(urls.enableRule(ruleId))
 }
 
+async function updateRule(rule) {
+  console.log(rule)
+  const index = alertRules.value.findIndex(r => r.id === rule.id)
+  alertRules.value[index] = rule
+  await axios.post(urls.updateRule(rule.id), rule)
+}
+
+async function createRule(rule) {
+  alertRules.value.push(rule)
+  await axios.post(urls.createRule(), rule)
+}
+
+function addRule(rule) {
+  alertRules.value.push(rule)
+}
+
 async function getRecipients() {
   const res = await axios.get(urls.getRecipient())
   recipients.value = res.data
@@ -48,6 +64,9 @@ onMounted(async () => {
           :recipients="recipients"
           @disable:rule="disableRule"
           @enable:rule="enableRule"
+          @update:rule="updateRule"
+          @delete:rule="deleteRule"
+          @create:rule="addRule"
         />
       </div>
     </div>

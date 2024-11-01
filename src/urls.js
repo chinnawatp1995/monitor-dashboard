@@ -21,8 +21,12 @@ export const urls = {
   addRecipient: () => `${SERVER_URL}/add-recipient`,
   enableRule: ruleId => `${SERVER_URL}/enable-rule?ruleId=${ruleId}`,
   disableRule: ruleId => `${SERVER_URL}/disable-rule?ruleId=${ruleId}`,
-  deleteRule: ruleId => `${SERVER_URL}/deleteRule?ruled=${ruleId}`,
-  updateRule: () => `${SERVER_URL}/updateRule`,
+  deleteRule: ruleId => `${SERVER_URL}/delete-alert?ruleId=${ruleId}`,
+  updateRule: () => `${SERVER_URL}/update-alert`,
   getRecipient: ruleId =>
     `${SERVER_URL}/recipients${ruleId ? `?ruleId=${ruleId}` : ''}`,
+  removeRecipientFromRule: (recipientId, ruleId) =>
+    `${SERVER_URL}/remove-recipient-from-rule?recipientId=${recipientId}&ruleId=${ruleId}`,
+  deleteRecipient: recipientId =>
+    `${SERVER_URL}/delete-recipient?recipientId=${recipientId}`,
 }

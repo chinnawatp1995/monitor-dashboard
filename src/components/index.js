@@ -16,6 +16,7 @@ import RxNetworkUsage from './charts/RxNetworkUsage.vue'
 import TxNetworkUsage from './charts/TxNetworkUsage.vue'
 import CreateAlertRuleForm from './forms/CreateAlertRuleForm.vue'
 import AlertRuleCard from './AlertRuleCard.vue'
+import UpdateRuleForm from './forms/UpdateRuleForm.vue'
 export {
   SideBar,
   FilterBar,
@@ -35,4 +36,5 @@ export {
   TxNetworkUsage,
   CreateAlertRuleForm,
   AlertRuleCard,
+  UpdateRuleForm,
 }

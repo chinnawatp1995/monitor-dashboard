@@ -46,6 +46,21 @@
             <p>{{ rule.message }}</p>
           </div>
         </div>
+        <div class="card-content-item">
+          <div>
+            <label style="font-weight: bold; font-size: 0.75rem"
+              >Recipients</label
+            >
+            <Chip
+              v-for="recipient in ruleRecipients"
+              :key="recipient.id"
+              :value="recipient.name"
+              :label="recipient.name"
+              removable
+              @remove="removeRecipient(recipient)"
+            />
+          </div>
+        </div>
       </div>
       <div class="card-input">
         <ToggleSwitch v-model="ruleEnabled" />
@@ -76,7 +91,20 @@
             ></Button>
           </div>
         </Popover>
-        <Button icon="pi pi-pencil" severity="info" raised outlined></Button>
+        <Button
+          icon="pi pi-pencil"
+          severity="info"
+          raised
+          outlined
+          @click="dialogShow = true"
+        ></Button>
+        <Dialog v-model:visible="dialogShow">
+          <UpdateRuleForm
+            :rule="rule"
+            @closeDialog="dialogShow = false"
+            @update:rule="updateRule"
+          />
+        </Dialog>
       </div>
     </template>
   </Card>
@@ -90,8 +118,9 @@ const props = defineProps(['rule', 'recipients'])
 const selectedRecipients = ref()
 const addRecipientError = ref()
 const op = ref()
-const ruleRecipient = ref()
-
+const ruleRecipientIds = ref()
+const ruleRecipients = ref()
+const dialogShow = ref(false)
 const ruleEnabled = ref(props.rule.enabled)
 
 const emit = defineEmits([
@@ -108,8 +137,9 @@ const toggle = event => {
 async function getRecipientsByRuled() {
   try {
     const res = await axios.get(urls.getRecipient(props.rule.id))
-    ruleRecipient.value = res.data.map(r => r.id)
-    selectedRecipients.value = ruleRecipient.value
+    ruleRecipientIds.value = res.data.map(r => r.id)
+    ruleRecipients.value = res.data
+    selectedRecipients.value = ruleRecipientIds.value
   } catch (e) {}
 }
 
@@ -129,11 +159,27 @@ async function addRecipientToRule(ruleId, recipientId) {
   }
 }
 
+async function removeRecipient(recipient) {
+  try {
+    const res = await axios.get(
+      urls.removeRecipientFromRule(recipient.id, props.rule.id),
+    )
+    ruleRecipients.value = ruleRecipients.value.filter(
+      r => r.id !== recipient.id,
+    )
+  } catch (e) {
+    console.error('Failed to remove recipient:', e)
+  }
+}
+
 async function deleteRule(ruleId) {
   emit('delete:rule', ruleId)
 }
 
-async function updateRule() {}
+async function updateRule(rule) {
+  console.log(rule)
+  emit('update:rule', rule)
+}
 
 onMounted(async () => {
   await getRecipientsByRuled()

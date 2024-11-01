@@ -31,6 +31,8 @@ import ScrollTop from 'primevue/scrolltop'
 import Textarea from 'primevue/textarea'
 import Popover from 'primevue/popover'
 import Listbox from 'primevue/listbox'
+import Tag from 'primevue/tag'
+import Chip from 'primevue/chip'
 
 import router from './router'
 import App from './App.vue'
@@ -53,7 +55,9 @@ import {
   RxNetworkUsage,
   TxNetworkUsage,
   CreateAlertRuleForm,
+  UpdateRuleForm,
 } from './components'
+import IftaLabel from 'primevue/iftalabel'
 
 const app = createApp(App)
 
@@ -91,6 +95,9 @@ const primeComponents = {
   Textarea,
   Popover,
   Listbox,
+  IftaLabel,
+  Tag,
+  Chip,
 }
 
 Object.entries(primeComponents).forEach(([name, component]) => {
@@ -115,6 +122,7 @@ const customComponents = {
   RxNetworkUsage,
   TxNetworkUsage,
   CreateAlertRuleForm,
+  UpdateRuleForm,
 }
 
 Object.entries(customComponents).forEach(([name, component]) => {
