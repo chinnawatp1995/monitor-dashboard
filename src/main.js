@@ -29,6 +29,8 @@ import MultiSelect from 'primevue/multiselect'
 import Toast from 'primevue/toast'
 import ScrollTop from 'primevue/scrolltop'
 import Textarea from 'primevue/textarea'
+import Popover from 'primevue/popover'
+import Listbox from 'primevue/listbox'
 
 import router from './router'
 import App from './App.vue'
@@ -87,6 +89,8 @@ const primeComponents = {
   Toast,
   ScrollTop,
   Textarea,
+  Popover,
+  Listbox,
 }
 
 Object.entries(primeComponents).forEach(([name, component]) => {

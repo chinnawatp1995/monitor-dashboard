@@ -44,9 +44,10 @@ const fetchCpuData = async () => {
   }
 
   cpuData.value = data.value
-  cpuData.value.forEach(item => {
-    item.time = convertTimeZone(item.time, 'Asia/Bangkok')
-  })
+  // console.log(cpuData.value)
+  // cpuData.value.forEach(item => {
+  //   item.time = convertTimeZone(item.time, 'Asia/Bangkok')
+  // })
   updateChart()
 }
 

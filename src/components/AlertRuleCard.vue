@@ -48,24 +48,104 @@
         </div>
       </div>
       <div class="card-input">
-        <Button icon="pi pi-play" severity="success" raised outlined></Button>
-        <Button icon="pi pi-stop" severity="danger" raised outlined></Button>
-        <Button icon="pi pi-pencil" severity="info" raised outlined></Button>
+        <ToggleSwitch v-model="ruleEnabled" />
         <Button
           icon="pi pi-user-plus"
           severity="warning"
           raised
           outlined
+          @click="toggle"
         ></Button>
+        <Popover ref="op">
+          <div>
+            <h4>Recievers</h4>
+            <Listbox
+              v-model="selectedRecipients"
+              :options="props.recipients"
+              multiple
+              optionLabel="name"
+              optionValue="id"
+              class="w-full md:w-100"
+            ></Listbox>
+            <Button
+              icon="pi pi-check"
+              label="confirm"
+              @click="
+                addRecipientToRule(props.rule.id, selectedRecipients), toggle()
+              "
+            ></Button>
+          </div>
+        </Popover>
+        <Button icon="pi pi-pencil" severity="info" raised outlined></Button>
       </div>
     </template>
   </Card>
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import axios from 'axios'
+import { onMounted, ref, watch } from 'vue'
+import { urls } from '../urls'
+const props = defineProps(['rule', 'recipients'])
+const selectedRecipients = ref()
+const addRecipientError = ref()
+const op = ref()
+const ruleRecipient = ref()
 
-const prop = defineProps(['rule'])
+const ruleEnabled = ref(props.rule.enabled)
+
+const emit = defineEmits([
+  'update:rule',
+  'delete:rule',
+  'enable:rule',
+  'disable:rule',
+])
+
+const toggle = event => {
+  op.value.toggle(event)
+}
+
+async function getRecipientsByRuled() {
+  try {
+    const res = await axios.get(urls.getRecipient(props.rule.id))
+    ruleRecipient.value = res.data.map(r => r.id)
+    selectedRecipients.value = ruleRecipient.value
+  } catch (e) {}
+}
+
+async function addRecipientToRule(ruleId, recipientId) {
+  if (!selectedRecipients.value) {
+    console.error('No recipients selected')
+    return
+  }
+  try {
+    await axios.post(urls.addRecipient(), {
+      ruleId,
+      recipientId: selectedRecipients.value,
+    })
+  } catch (e) {
+    addRecipientError.value = e
+    console.error('Failed to add recipient:', e)
+  }
+}
+
+async function deleteRule(ruleId) {
+  emit('delete:rule', ruleId)
+}
+
+async function updateRule() {}
+
+onMounted(async () => {
+  await getRecipientsByRuled()
+})
+
+watch(ruleEnabled, newValue => {
+  if (newValue) {
+    emit('enable:rule', props.rule.id)
+  } else {
+    emit('disable:rule', props.rule.id)
+  }
+})
 </script>
 
 <style scoped>
@@ -77,7 +157,6 @@ const prop = defineProps(['rule'])
   display: flex;
   justify-content: space-between;
 }
-
 .card-input {
   display: flex;
   justify-content: flex-end;

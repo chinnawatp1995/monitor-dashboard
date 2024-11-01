@@ -1,13 +1,34 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import axios from 'axios'
 import { useAxios } from '../composables/useAxios'
 import { urls } from '../urls'
 import AlertRuleCard from '../components/AlertRuleCard.vue'
 const alertRules = ref([])
 
 const { data, error, axiosData } = useAxios(urls.getAlertRules(), 'get')
+const recipients = ref()
+
+async function disableRule(ruleId) {
+  const index = alertRules.value.findIndex(rule => rule.id === ruleId)
+  alertRules.value[index].enabled = false
+  await axios.get(urls.disableRule(ruleId))
+}
+
+async function enableRule(ruleId) {
+  const index = alertRules.value.findIndex(rule => rule.id === ruleId)
+  alertRules.value[index].enabled = true
+  await axios.get(urls.enableRule(ruleId))
+}
+
+async function getRecipients() {
+  const res = await axios.get(urls.getRecipient())
+  recipients.value = res.data
+}
+
 onMounted(async () => {
   await axiosData()
+  await getRecipients()
   alertRules.value = data.value
 })
 </script>
@@ -22,7 +43,12 @@ onMounted(async () => {
     <div class="right-side scrollable">
       <h3>Alert Rules</h3>
       <div class="card-wrapper" v-for="rule in alertRules">
-        <AlertRuleCard :rule="rule" />
+        <AlertRuleCard
+          :rule="rule"
+          :recipients="recipients"
+          @disable:rule="disableRule"
+          @enable:rule="enableRule"
+        />
       </div>
     </div>
   </div>
