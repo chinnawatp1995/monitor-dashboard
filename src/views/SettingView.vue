@@ -44,29 +44,17 @@ const deleteRecipient = async index => {
 </script>
 
 <template>
-  <div class="p-4">
+  <div class="page-wrapper">
     <h2 class="text-2xl font-bold mb-4">Monitor Alert Recipients</h2>
 
-    <div class="mb-8">
+    <div class="left-wrapper mb-8">
       <h3 class="text-xl mb-4">Add New Recipients</h3>
       <div class="flex flex-col gap-4 max-w-md">
-        <div>
-          <label class="block mb-1">Token</label>
-          <InputText v-model="newRecipient.token" class="w-full" />
-        </div>
-        <div>
-          <label class="block mb-1">Room ID</label>
-          <InputText v-model="newRecipient.roomId" class="w-full" />
-        </div>
-        <div>
-          <label class="block mb-1">Application</label>
-          <InputText v-model="newRecipient.application" class="w-full" />
-        </div>
-        <Button label="Add Recipient" @click="addRecipient" />
+        <CreateRecipientForm />
       </div>
     </div>
 
-    <div>
+    <div class="right-wrapper">
       <h3 class="text-xl mb-4">Existing Recipients</h3>
       <DataTable :value="recipients" class="p-datatable-sm">
         <Column field="token" header="Token"></Column>
@@ -85,3 +73,16 @@ const deleteRecipient = async index => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.page-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+}
+.left-wrapper {
+  grid-column: 1 /2;
+}
+.right-wrapper {
+  grid-column: 2 /3;
+}
+</style>

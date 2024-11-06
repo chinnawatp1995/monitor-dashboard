@@ -31,23 +31,24 @@
 .side-bar-wrapper {
   display: flex;
   flex-direction: column;
-  width: 5em;
+  width: 4em;
   height: 100vh;
   position: fixed;
   justify-content: center;
   align-items: center;
   top: 0;
   left: 0;
-  padding: 1em 0.75em;
-  border-radius: 2em;
-  z-index: 10; /* Ensure it stays above the main content */
+  border-radius: 15em;
+  z-index: 10;
+  box-shadow: 0 20px 20px rgba(0, 0, 0, 0.1);
+  background-color: white;
 }
 
 .main-content-wrapper {
   display: grid;
   grid-template-rows: 5em 1fr;
   grid-column: 2 / 3;
-  padding-left: 2em; /* Add padding equal to sidebar width */
+  padding-left: 2em;
 }
 
 .header-wrapper {
@@ -55,6 +56,7 @@
   padding: 1em;
   grid-row: 1 / 2;
   padding-top: 1em;
+  background-color: white;
 }
 
 .content-wrapper {

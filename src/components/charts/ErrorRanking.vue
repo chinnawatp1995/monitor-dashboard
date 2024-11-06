@@ -5,7 +5,12 @@
 <script setup>
 import axios from 'axios'
 import { defineProps, ref, onMounted, watch } from 'vue'
-import { red } from '../../assets/color-palette/palette-1'
+import {
+  red,
+  theme1,
+  theme2,
+  theme3,
+} from '../../assets/color-palette/palette-1'
 import { urls } from '../../urls'
 
 const errorRanking = ref()
@@ -23,7 +28,7 @@ const fetchPathData = async () => {
       datasets: [
         {
           data: errorRanking.value.map(v => v.error_count),
-          backgroundColor: red.reverse(), // Define your background colors here
+          backgroundColor: theme1, // Define your background colors here
           hoverBackgroundColor: '', // Define hover background colors here
         },
       ],
@@ -38,10 +43,10 @@ const setChartOptions = () => {
   return {
     plugins: {
       legend: {
-        position: 'right',
+        position: 'bottom',
         labels: {
           usePointStyle: true,
-          color: '', // Define the color for legend labels
+          color: '',
         },
       },
     },

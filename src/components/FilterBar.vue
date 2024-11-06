@@ -64,11 +64,11 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   color: rgb(50, 50, 50);
-  /* width: 25%; */
   margin-left: 2em;
-  padding: 2.75em 1.5em;
+  padding: 1em;
   background-color: rgb(252, 252, 252);
   border-radius: 0.5em;
+  box-shadow: 0 12px 12px rgba(0, 0, 0, 0.1);
 }
 .dropdown {
   margin-left: 1em;

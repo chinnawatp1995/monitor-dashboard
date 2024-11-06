@@ -17,6 +17,7 @@ import TxNetworkUsage from './charts/TxNetworkUsage.vue'
 import CreateAlertRuleForm from './forms/CreateAlertRuleForm.vue'
 import AlertRuleCard from './AlertRuleCard.vue'
 import UpdateRuleForm from './forms/UpdateRuleForm.vue'
+import CreateRecipientForm from './forms/CreateRecipientForm.vue'
 export {
   SideBar,
   FilterBar,
@@ -37,4 +38,5 @@ export {
   CreateAlertRuleForm,
   AlertRuleCard,
   UpdateRuleForm,
+  CreateRecipientForm,
 }

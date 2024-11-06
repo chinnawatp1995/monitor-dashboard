@@ -1,5 +1,6 @@
 import { theme1, theme2, theme3 } from '../assets/color-palette/palette-1'
 import { DateTime } from 'luxon'
+
 export function updateLineChart(
   dataRef,
   chartData,
@@ -7,6 +8,7 @@ export function updateLineChart(
   field = 'avg',
   xAxis = 'time',
   yAxis = 'value',
+  legendPosition = 'top',
 ) {
   try {
     const keys = Object.keys(dataRef.value)
@@ -27,11 +29,12 @@ export function updateLineChart(
     const datasets = Object.entries(dataRef.value).map(([k, v]) => {
       return {
         label: k,
-        fill: false,
-        borderColor: theme3[ii++ % theme3.length],
+        fill: true,
+        borderColor: theme3[ii % theme3.length],
+        backgroundColor: `${theme3[ii++ % theme3.length]}25`,
         fill: true,
         yAxisID: 'y',
-        tension: 0.4,
+        tension: 0,
         data: v.map(avg => avg[field]),
       }
     })
@@ -40,25 +43,34 @@ export function updateLineChart(
       labels,
       datasets,
     }
-    setLineChartOptions(chartOptions, xAxis, yAxis)
+    setLineChartOptions(chartOptions, xAxis, yAxis, legendPosition)
   } catch (e) {
     console.error('Error updating chart:', e)
   }
 }
 
-export function setLineChartOptions(chartOptions, xAxis, yAxis) {
+export function setLineChartOptions(
+  chartOptions,
+  xAxis,
+  yAxis,
+  legendPosition,
+) {
   chartOptions.value = {
     responsive: true,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
     animation: false,
     plugins: {
       legend: {
         display: true,
-        position: 'top',
+        position: legendPosition,
       },
       tooltip: {
         mode: 'index',
         intersect: false,
+      },
+      decimation: {
+        enabled: false,
+        algorithm: 'lttb',
       },
     },
     scales: {
@@ -82,10 +94,11 @@ export function setLineChartOptions(chartOptions, xAxis, yAxis) {
               hour: '2-digit',
               minute: '2-digit',
               hour12: false,
+              timeZone: 'Asia/Bangkok',
             })
           },
           autoSkip: true,
-          maxTicksLimit: 20,
+          maxTicksLimit: 10,
         },
       },
       y: {
@@ -93,7 +106,7 @@ export function setLineChartOptions(chartOptions, xAxis, yAxis) {
           display: true,
           text: yAxis,
           font: {
-            size: 10,
+            size: 1,
           },
         },
       },

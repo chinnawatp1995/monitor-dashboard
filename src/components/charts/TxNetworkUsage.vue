@@ -3,7 +3,7 @@
     type="line"
     :data="chartData"
     :options="chartOptions"
-    class="h-[100rem]"
+    class="chart-heigh"
   />
 </template>
 
@@ -34,7 +34,7 @@ const fetchNetworkData = async () => {
       startTime: props.startTime,
       endTime: props.endTime,
       resolution: props.resolution,
-      machineIds:
+      machines:
         props.service !== 'All'
           ? (await axios.get(urls.getMachines(props.service))).data
           : undefined,
@@ -57,7 +57,7 @@ const updateChart = () => {
     networkData,
     chartData,
     chartOptions,
-    'avg',
+    'value',
     'time',
     'Tx Network Usage (bytes)',
   )
@@ -89,3 +89,9 @@ onBeforeUnmount(() => {
   stopPolling()
 })
 </script>
+
+<style scoped>
+.chart-heigh {
+  height: 40vh;
+}
+</style>

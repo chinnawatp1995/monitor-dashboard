@@ -29,4 +29,5 @@ export const urls = {
     `${SERVER_URL}/remove-recipient-from-rule?recipientId=${recipientId}&ruleId=${ruleId}`,
   deleteRecipient: recipientId =>
     `${SERVER_URL}/delete-recipient?recipientId=${recipientId}`,
+  getController: service => `${SERVER_URL}/controllers?service=${service}`,
 }

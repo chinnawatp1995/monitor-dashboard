@@ -3,7 +3,7 @@
     type="line"
     :data="chartData"
     :options="chartOptions"
-    class="h-[100rem]"
+    class="chart-heigh"
   />
 </template>
 
@@ -12,7 +12,7 @@ import axios from 'axios'
 import { ref, onMounted, onBeforeUnmount, watch, defineProps } from 'vue'
 import { urls } from '../../urls'
 import { useAxios } from '../../composables/useAxios'
-import { updateLineChart, convertTimeZone } from '../../utils/util-functions'
+import { updateLineChart } from '../../utils/util-functions'
 const cpuData = ref({})
 const chartData = ref({
   labels: [],
@@ -30,7 +30,7 @@ const fetchCpuData = async () => {
     startTime: props.startTime,
     endTime: props.endTime,
     resolution: props.resolution,
-    machineIds:
+    machines:
       props.service !== 'All'
         ? (await axios.get(urls.getMachines(props.service))).data
         : undefined,
@@ -56,7 +56,7 @@ const updateChart = () => {
     cpuData,
     chartData,
     chartOptions,
-    'avg',
+    'value',
     'time',
     'CPU Usage (%)',
   )
@@ -88,3 +88,9 @@ onBeforeUnmount(() => {
   stopPolling()
 })
 </script>
+
+<style scoped>
+.chart-heigh {
+  height: 40vh;
+}
+</style>

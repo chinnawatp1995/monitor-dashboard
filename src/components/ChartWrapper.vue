@@ -35,6 +35,7 @@
       :startTime="startTime"
       :endTime="endTime"
       :resolution="resolution"
+      :controller="controller"
       @update:startTime="onStartTimeChange"
       @update:endTime="onEndTimeChange"
       @update:resolution="onResolutionChange"
@@ -53,6 +54,7 @@ import { subMonths } from 'date-fns'
 const startTime = ref(subMonths(new Date(), 1).toISOString())
 const endTime = ref(new Date().toISOString())
 const resolution = ref('1 hour')
+const controller = ref()
 const dialogVisible = ref(false)
 
 const props = defineProps(['title', 'withFilter'])
@@ -73,6 +75,10 @@ function onResolutionChange(value) {
   // console.log('onResolutionChange', value)
   resolution.value = value
 }
+
+function onControllerChange(value) {
+  controller.value = value
+}
 </script>
 
 <style scoped>
@@ -88,7 +94,6 @@ function onResolutionChange(value) {
 .expand-button:hover {
   background-color: rgb(236, 236, 236);
   padding: 1rem;
-
   border-radius: 1rem;
 }
 </style>

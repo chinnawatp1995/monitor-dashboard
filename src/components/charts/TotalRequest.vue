@@ -3,7 +3,7 @@
     type="line"
     :data="chartData"
     :options="chartOptions"
-    class="h-[10 rem]"
+    class="chart-heigh"
   />
 </template>
 
@@ -16,7 +16,13 @@ const totalReqData = ref([])
 const chartData = ref()
 const chartOptions = ref()
 
-const props = defineProps(['service', 'startTime', 'endTime', 'resolution'])
+const props = defineProps([
+  'service',
+  'startTime',
+  'endTime',
+  'resolution',
+  'controller',
+])
 
 const pollingInterval = 5000
 let pollingTimer = null
@@ -36,7 +42,7 @@ async function fetchCpuData() {
         startTime: props.startTime,
         endTime: props.endTime,
         resolution: props.resolution,
-        machineIds: [...machines],
+        machines: [...machines],
       })
     }
     Object.entries(res.data).forEach(([k, v]) => {
@@ -53,7 +59,15 @@ async function fetchCpuData() {
 }
 
 const updateChart = () => {
-  updateLineChart(totalReqData, chartData, chartOptions, 'total_requests')
+  updateLineChart(
+    totalReqData,
+    chartData,
+    chartOptions,
+    'value',
+    'time',
+    'Total Request',
+    'right',
+  )
 }
 
 function startPolling() {
@@ -129,5 +143,8 @@ onBeforeUnmount(() => {
 
 .resolution {
   margin-top: 1em;
+}
+.chart-heigh {
+  height: 40vh;
 }
 </style>

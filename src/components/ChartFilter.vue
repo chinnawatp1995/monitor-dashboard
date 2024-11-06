@@ -17,32 +17,47 @@
         @update:model-value="handleEndTimeChange"
       />
     </div>
-    <div class="resolution">
-      <SelectButton
-        v-model="resolution"
-        :options="options"
-        optionLabel="name"
-        optionValue="value"
-        aria-labelledby="multiple"
-        @change="handleResolutionChange"
-      />
+    <div>
+      <div class="resolution">
+        <SelectButton
+          v-model="resolution"
+          :options="options"
+          optionLabel="name"
+          optionValue="value"
+          aria-labelledby="multiple"
+          @change="handleResolutionChange"
+        />
+      </div>
+      <div class="dropdown" v-if="controller">
+        <Dropdown
+          v-model="selectedController"
+          :options="controller"
+          placeholder="All"
+          class="w-full md:w-14rem"
+          @update:model-value="onServiceChange"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import axios from 'axios'
+import { onMounted, ref } from 'vue'
+import { urls } from '../urls'
 
-const props = defineProps(['startTime', 'endTime', 'resolution'])
+const props = defineProps(['startTime', 'endTime', 'resolution', 'service'])
 
 const startTime = ref(props.startTime)
 const endTime = ref(props.endTime)
 const resolution = ref(props.resolution)
+const selectedController = ref(props.controller)
 
 const emit = defineEmits([
   'update:startTime',
   'update:endTime',
   'update:resolution',
+  'update:controller',
 ])
 
 const options = ref([
@@ -50,6 +65,8 @@ const options = ref([
   { name: '1D', value: '1 day' },
   { name: '1W', value: '1 week' },
 ])
+
+const controllerOptions = ref([])
 
 function handleResolutionChange() {
   // console.log('handleResolutionChange', resolution.value)

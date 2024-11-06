@@ -3,7 +3,7 @@
     type="line"
     :data="chartData"
     :options="chartOptions"
-    class="h-[10 rem]"
+    class="chart-heigh"
   />
 </template>
 
@@ -37,7 +37,7 @@ async function fetchResponseData() {
         endTime: props.endTime,
         resolution: props.resolution,
         services: [props.service],
-        machineIds: [...machines],
+        machines: [...machines],
       })
     }
     Object.entries(res.data).forEach(([k, v]) => {
@@ -57,7 +57,7 @@ const updateChart = () => {
     responseAvgData,
     chartData,
     chartOptions,
-    'avg',
+    'value',
     'time',
     'Response Time (ms)',
   )
@@ -122,5 +122,8 @@ onBeforeUnmount(() => {
 
 .resolution {
   margin-top: 1em;
+}
+.chart-heigh {
+  height: 40vh;
 }
 </style>

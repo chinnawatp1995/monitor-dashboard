@@ -34,6 +34,8 @@ import Listbox from 'primevue/listbox'
 import Tag from 'primevue/tag'
 import Chip from 'primevue/chip'
 
+import ApexCharts from 'vue3-apexcharts'
+
 import router from './router'
 import App from './App.vue'
 
@@ -56,8 +58,10 @@ import {
   TxNetworkUsage,
   CreateAlertRuleForm,
   UpdateRuleForm,
+  CreateRecipientForm,
 } from './components'
 import IftaLabel from 'primevue/iftalabel'
+import VueApexCharts from 'vue3-apexcharts'
 
 const app = createApp(App)
 
@@ -67,6 +71,8 @@ app.use(PrimeVue, {
     options: { darkModeSelector: false || 'none' },
   },
 })
+
+app.use(VueApexCharts)
 
 const primeComponents = {
   Sidebar,
@@ -123,6 +129,7 @@ const customComponents = {
   TxNetworkUsage,
   CreateAlertRuleForm,
   UpdateRuleForm,
+  CreateRecipientForm,
 }
 
 Object.entries(customComponents).forEach(([name, component]) => {

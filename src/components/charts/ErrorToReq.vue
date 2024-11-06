@@ -1,10 +1,5 @@
 <template>
-  <Chart
-    type="pie"
-    :data="chartData"
-    :options="chartOptions"
-    class="w-32 h-32"
-  />
+  <Chart type="pie" :data="chartData" :options="chartOptions" height="400" />
 </template>
 
 <script setup>
@@ -43,8 +38,11 @@ const fetchPathData = async () => {
 
 const setChartOptions = () => {
   return {
+    responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
+        position: 'right',
         labels: {
           usePointStyle: true,
           color: '', // Define the color for legend labels

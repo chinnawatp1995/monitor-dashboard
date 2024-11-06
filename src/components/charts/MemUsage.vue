@@ -3,7 +3,7 @@
     type="line"
     :data="chartData"
     :options="chartOptions"
-    class="h-[10rem]"
+    class="chart-heigh"
   />
 </template>
 
@@ -30,7 +30,7 @@ async function fetchMemData() {
     startTime: props.startTime,
     endTime: props.endTime,
     resolution: props.resolution,
-    machineIds:
+    machines:
       props.service !== 'All'
         ? (await axios.get(urls.getMachines(props.service))).data
         : undefined,
@@ -58,9 +58,10 @@ const updateChart = () => {
     memData,
     chartData,
     chartOptions,
-    'avg',
+    'value',
     'time',
     'Memory Usage (%)',
+    'right',
   )
 }
 
@@ -91,3 +92,9 @@ onBeforeUnmount(() => {
   stopPolling()
 })
 </script>
+
+<style scoped>
+.chart-heigh {
+  height: 40vh;
+}
+</style>

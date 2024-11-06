@@ -21,18 +21,6 @@
           </template>
         </ChartWrapper>
       </div>
-      <div class="chart-wrapper req">
-        <ChartWrapper title="Total Request By Server" :withFilter="true">
-          <template v-slot="{ startTime, endTime, resolution }">
-            <TotalRequest
-              :service="selectedService"
-              :startTime="startTime"
-              :endTime="endTime"
-              :resolution="resolution"
-            ></TotalRequest>
-          </template>
-        </ChartWrapper>
-      </div>
       <div class="chart-wrapper mem">
         <ChartWrapper title="Memory Usage" :withFilter="true">
           <template v-slot="{ startTime, endTime, resolution }">
@@ -45,11 +33,47 @@
           </template>
         </ChartWrapper>
       </div>
+      <div class="chart-wrapper rx-network-usage">
+        <ChartWrapper title="Rx Network Usage" :withFilter="true">
+          <template v-slot="{ startTime, endTime, resolution }">
+            <RxNetworkUsage
+              :service="selectedService"
+              :startTime="startTime"
+              :endTime="endTime"
+              :resolution="resolution"
+            ></RxNetworkUsage>
+          </template>
+        </ChartWrapper>
+      </div>
+      <div class="chart-wrapper tx-network-usage">
+        <ChartWrapper title="Tx Network Usage" :withFilter="true">
+          <template v-slot="{ startTime, endTime, resolution }">
+            <TxNetworkUsage
+              :service="selectedService"
+              :startTime="startTime"
+              :endTime="endTime"
+              :resolution="resolution"
+            ></TxNetworkUsage>
+          </template>
+        </ChartWrapper>
+      </div>
+      <div class="chart-wrapper req">
+        <ChartWrapper title="Total Request By Server" :withFilter="true">
+          <template v-slot="{ startTime, endTime, resolution }">
+            <TotalRequest
+              :service="selectedService"
+              :startTime="startTime"
+              :endTime="endTime"
+              :resolution="resolution"
+            ></TotalRequest>
+          </template>
+        </ChartWrapper>
+      </div>
       <div
         v-if="selectedService && selectedService !== 'All'"
         class="chart-wrapper req-path"
       >
-        <ChartWrapper title="Request Path" :withFilter="true">
+        <ChartWrapper title="Request Path" :withFilter="false">
           <template v-slot="{ startTime, endTime, resolution }">
             <RequestPath
               :service="selectedService"
@@ -60,7 +84,10 @@
           </template>
         </ChartWrapper>
       </div>
-      <div class="chart-wrapper avg-response">
+      <div
+        v-if="selectedService && selectedService !== 'All'"
+        class="chart-wrapper avg-response"
+      >
         <ChartWrapper title="Average Response Time" :withFilter="true">
           <template v-slot="{ startTime, endTime, resolution }">
             <ResponseAvg
@@ -102,30 +129,6 @@
           </template>
         </ChartWrapper>
       </div>
-      <div class="chart-wrapper rx-network-usage">
-        <ChartWrapper title="Rx Network Usage" :withFilter="true">
-          <template v-slot="{ startTime, endTime, resolution }">
-            <RxNetworkUsage
-              :service="selectedService"
-              :startTime="startTime"
-              :endTime="endTime"
-              :resolution="resolution"
-            ></RxNetworkUsage>
-          </template>
-        </ChartWrapper>
-      </div>
-      <div class="chart-wrapper tx-network-usage">
-        <ChartWrapper title="Tx Network Usage" :withFilter="true">
-          <template v-slot="{ startTime, endTime, resolution }">
-            <TxNetworkUsage
-              :service="selectedService"
-              :startTime="startTime"
-              :endTime="endTime"
-              :resolution="resolution"
-            ></TxNetworkUsage>
-          </template>
-        </ChartWrapper>
-      </div>
     </div>
   </div>
 </template>
@@ -156,6 +159,7 @@ function onUpdateSelectedService(service) {
   grid-auto-rows: min-content;
   margin-top: 1em;
   padding-right: 4em;
+  padding-bottom: 4rem;
 }
 .chart-wrapper {
   background-color: rgb(255, 255, 255);
@@ -163,15 +167,16 @@ function onUpdateSelectedService(service) {
   border-radius: 1em;
   margin-top: 2em;
   margin-left: 2em;
+  box-shadow: 0 12px 12px rgba(0, 0, 0, 0.1);
 }
 .server-status {
-  grid-column: 1 / 6;
+  grid-column: 1 / 5;
 }
 .cpu {
-  grid-column: 6 / 13;
+  grid-column: 5 / 13;
 }
 .mem {
-  grid-column: 7 / 13;
+  grid-column: 1 / 13;
 }
 .rx-network-usage {
   grid-column: 1 / 7;
@@ -180,13 +185,13 @@ function onUpdateSelectedService(service) {
   grid-column: 7 / 13;
 }
 .req {
-  grid-column: 1 / 7;
+  grid-column: 1 / 13;
 }
 .req-path {
   grid-column: 1 / 6;
 }
 .error-rate {
-  grid-column: 6 / 12;
+  grid-column: 6 / 13;
 }
 .error-ranking {
   grid-column: 1 / 6;
