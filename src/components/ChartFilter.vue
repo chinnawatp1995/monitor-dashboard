@@ -28,7 +28,7 @@
           @change="handleResolutionChange"
         />
       </div>
-      <div class="dropdown" v-if="controller">
+      <div class="dropdown">
         <Dropdown
           v-model="selectedController"
           :options="controller"

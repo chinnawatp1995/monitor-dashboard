@@ -59,6 +59,9 @@ import {
   CreateAlertRuleForm,
   UpdateRuleForm,
   CreateRecipientForm,
+  ApexChart,
+  CpuApex,
+  MemApex,
 } from './components'
 import IftaLabel from 'primevue/iftalabel'
 import VueApexCharts from 'vue3-apexcharts'
@@ -130,6 +133,9 @@ const customComponents = {
   CreateAlertRuleForm,
   UpdateRuleForm,
   CreateRecipientForm,
+  ApexChart,
+  CpuApex,
+  MemApex,
 }
 
 Object.entries(customComponents).forEach(([name, component]) => {

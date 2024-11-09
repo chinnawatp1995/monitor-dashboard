@@ -10,7 +10,7 @@
         </ChartWrapper>
       </div>
       <div class="chart-wrapper cpu">
-        <ChartWrapper title="CPU Usage" :withFilter="true">
+        <!-- <ChartWrapper title="CPU Usage" :withFilter="true">
           <template v-slot="{ startTime, endTime, resolution }">
             <CpuUsage
               :service="selectedService"
@@ -19,17 +19,33 @@
               :resolution="resolution"
             ></CpuUsage>
           </template>
-        </ChartWrapper>
-      </div>
-      <div class="chart-wrapper mem">
-        <ChartWrapper title="Memory Usage" :withFilter="true">
+        </ChartWrapper> -->
+        <ChartWrapper title="CPU Usage" :withFilter="false">
           <template v-slot="{ startTime, endTime, resolution }">
-            <MemUsage
+            <CpuApex
               :service="selectedService"
               :startTime="startTime"
               :endTime="endTime"
               :resolution="resolution"
-            ></MemUsage>
+            ></CpuApex
+          ></template>
+        </ChartWrapper>
+      </div>
+      <div class="chart-wrapper mem">
+        <ChartWrapper title="Memory Usage" :withFilter="false">
+          <template v-slot="{ startTime, endTime, resolution }">
+            <!-- <MemUsage
+              :service="selectedService"
+              :startTime="startTime"
+              :endTime="endTime"
+              :resolution="resolution"
+            ></MemUsage> -->
+            <MemApex
+              :service="selectedService"
+              :startTime="startTime"
+              :endTime="endTime"
+              :resolution="resolution"
+            ></MemApex>
           </template>
         </ChartWrapper>
       </div>
@@ -129,12 +145,25 @@
           </template>
         </ChartWrapper>
       </div>
+      <!-- <div class="chart-wrapper">
+        <ChartWrapper title="CPU Usage" :withFilter="false">
+          <template v-slot="{ startTime, endTime, resolution }">
+            <CpuApex
+              :service="selectedService"
+              :startTime="startTime"
+              :endTime="endTime"
+              :resolution="resolution"
+            ></CpuApex
+          ></template>
+        </ChartWrapper>
+      </div> -->
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import MemApex from '../components/apexChart/MemApex.vue'
 
 const selectedService = ref('All')
 const currentPage = ref('dashboard')

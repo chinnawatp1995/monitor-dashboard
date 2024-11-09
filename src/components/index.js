@@ -18,6 +18,10 @@ import CreateAlertRuleForm from './forms/CreateAlertRuleForm.vue'
 import AlertRuleCard from './AlertRuleCard.vue'
 import UpdateRuleForm from './forms/UpdateRuleForm.vue'
 import CreateRecipientForm from './forms/CreateRecipientForm.vue'
+import ApexChart from './apexChart/ApexChart.vue'
+import CpuApex from './apexChart/CpuApex.vue'
+import MemApex from './apexChart/MemApex.vue'
+
 export {
   SideBar,
   FilterBar,
@@ -39,4 +43,7 @@ export {
   AlertRuleCard,
   UpdateRuleForm,
   CreateRecipientForm,
+  ApexChart,
+  CpuApex,
+  MemApex,
 }

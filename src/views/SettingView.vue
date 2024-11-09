@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
+import { urls } from '../urls'
 
 const recipients = ref([
   {
@@ -11,22 +12,11 @@ const recipients = ref([
   },
 ])
 
-const newRecipient = ref({
-  token: '',
-  roomId: '',
-  application: '',
-})
-
-const addRecipient = async () => {
+const createRecipient = async newRecipient => {
+  console.log('ok')
   try {
-    // TODO: Replace with actual API endpoint
-    await axios.post('/api/recipients', newRecipient.value)
-    recipients.value.push({ ...newRecipient.value })
-    newRecipient.value = {
-      token: '',
-      roomId: '',
-      application: '',
-    }
+    await axios.post(urls.createRecipient(), newRecipient)
+    recipients.value.push({ ...newRecipient })
   } catch (error) {
     console.error('Error adding recipient:', error)
   }
@@ -50,7 +40,7 @@ const deleteRecipient = async index => {
     <div class="left-wrapper mb-8">
       <h3 class="text-xl mb-4">Add New Recipients</h3>
       <div class="flex flex-col gap-4 max-w-md">
-        <CreateRecipientForm />
+        <CreateRecipientForm @createRecipient="createRecipient" />
       </div>
     </div>
 
