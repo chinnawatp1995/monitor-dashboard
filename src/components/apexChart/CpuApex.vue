@@ -70,7 +70,7 @@ const cpuData = ref({})
 const series = ref([])
 const chartRef = ref(null)
 const selection = ref('one_week')
-const totalPoint = ref(300)
+const totalPoint = ref(500)
 const chartOptions = ref({
   chart: {
     type: 'area',
