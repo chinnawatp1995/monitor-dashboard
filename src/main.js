@@ -62,6 +62,13 @@ import {
   ApexChart,
   CpuApex,
   MemApex,
+  BaseApexAreaChart,
+  RxNetworkApex,
+  TxNetworkApex,
+  TotalRequestApex,
+  ResponseAverageApex,
+  BaseApexColumnChart,
+  RequestErrorRatioApex,
 } from './components'
 import IftaLabel from 'primevue/iftalabel'
 import VueApexCharts from 'vue3-apexcharts'
@@ -136,6 +143,13 @@ const customComponents = {
   ApexChart,
   CpuApex,
   MemApex,
+  BaseApexAreaChart,
+  RxNetworkApex,
+  TxNetworkApex,
+  TotalRequestApex,
+  ResponseAverageApex,
+  BaseApexColumnChart,
+  RequestErrorRatioApex,
 }
 
 Object.entries(customComponents).forEach(([name, component]) => {

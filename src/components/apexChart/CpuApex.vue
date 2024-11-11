@@ -32,7 +32,13 @@
       >
         YTD
       </button>
-
+      <button
+        id="all"
+        @click="updateData('three_days')"
+        :class="{ active: selection === 'three_days' }"
+      >
+        3D
+      </button>
       <button
         id="all"
         @click="updateData('one_week')"
@@ -63,7 +69,7 @@ import { subDays, subMonths, subWeeks, subYears } from 'date-fns'
 const cpuData = ref({})
 const series = ref([])
 const chartRef = ref(null)
-const selection = ref('one_year')
+const selection = ref('one_week')
 const chartOptions = ref({
   chart: {
     type: 'area',
@@ -101,12 +107,10 @@ const chartOptions = ref({
 
 const props = defineProps(['service', 'startTime', 'endTime', 'resolution'])
 
-const fetchCpuData = async (startTime, endTime, resolution, service) => {
-  console.log(startTime, endTime)
+const fetchCpuData = async (interval, totalPoint = 500, service) => {
   const { data, error, axiosData } = useAxios(urls.getCpuUsage(), 'post', {
-    startTime: startTime,
-    endTime: endTime,
-    resolution: resolution,
+    interval,
+    totalPoint,
     machines:
       service !== 'All'
         ? (await axios.get(urls.getMachines(service))).data
@@ -136,42 +140,35 @@ const fetchCpuData = async (startTime, endTime, resolution, service) => {
 watch(
   () => props.service,
   () => {
-    fetchCpuData(
-      props.startTime,
-      props.endTime,
-      props.resolution,
-      props.service,
-    )
+    updateData(selection.value)
   },
 )
 
 onMounted(() => {
-  fetchCpuData(
-    subYears(new Date(), 1).toISOString(),
-    new Date().toISOString(),
-    '30 minutes',
-    props.service,
-  )
+  updateData(selection.value)
 })
 
 const updateData = function (timeline) {
-  this.selection = timeline
+  selection.value = timeline
   const now = new Date()
   switch (timeline) {
     case 'one_month':
-      chartRef.value.zoomX(subMonths(now, 1).getTime(), now.getTime())
+      fetchCpuData('1 month', 500, props.service)
       break
     case 'six_months':
-      chartRef.value.zoomX(subMonths(now, 6).getTime(), now.getTime())
+      fetchCpuData('6 months', 500, props.service)
       break
     case 'one_year':
-      chartRef.value.zoomX(subYears(now, 1).getTime(), now.getTime())
+      fetchCpuData('1 year', 500, props.service)
       break
     case 'ytd':
-      chartRef.value.zoomX(subDays(now, 1).getTime(), now.getTime())
+      fetchCpuData('1 day', 500, props.service)
+      break
+    case 'three_days':
+      fetchCpuData('3 days', 500, props.service)
       break
     case 'one_week':
-      chartRef.value.zoomX(subWeeks(now, 1).getTime(), now.getTime())
+      fetchCpuData('1 week', 500, props.service)
       break
     default:
   }

@@ -21,7 +21,13 @@ import CreateRecipientForm from './forms/CreateRecipientForm.vue'
 import ApexChart from './apexChart/ApexChart.vue'
 import CpuApex from './apexChart/CpuApex.vue'
 import MemApex from './apexChart/MemApex.vue'
-
+import BaseApexAreaChart from './apexChart/BaseApexAreaChart.vue'
+import RxNetworkApex from './apexChart/RxNetworkApex.vue'
+import TxNetworkApex from './apexChart/TxNetworkApex.vue'
+import TotalRequestApex from './apexChart/TotalRequestApex.vue'
+import ResponseAverageApex from './apexChart/ResponseAverageApex.vue'
+import BaseApexColumnChart from './apexChart/BaseApexColumnChart.vue'
+import RequestErrorRatioApex from './apexChart/RequestErrorRatioApex.vue'
 export {
   SideBar,
   FilterBar,
@@ -46,4 +52,11 @@ export {
   ApexChart,
   CpuApex,
   MemApex,
+  BaseApexAreaChart,
+  RxNetworkApex,
+  TxNetworkApex,
+  TotalRequestApex,
+  ResponseAverageApex,
+  BaseApexColumnChart,
+  RequestErrorRatioApex,
 }

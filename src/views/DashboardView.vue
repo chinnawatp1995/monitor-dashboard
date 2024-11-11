@@ -50,38 +50,41 @@
         </ChartWrapper>
       </div>
       <div class="chart-wrapper rx-network-usage">
-        <ChartWrapper title="Rx Network Usage" :withFilter="true">
+        <ChartWrapper title="Rx Network Usage" :withFilter="false">
           <template v-slot="{ startTime, endTime, resolution }">
-            <RxNetworkUsage
+            <!-- <RxNetworkUsage
               :service="selectedService"
               :startTime="startTime"
               :endTime="endTime"
               :resolution="resolution"
-            ></RxNetworkUsage>
+            ></RxNetworkUsage> -->
+            <RxNetworkApex :service="selectedService"></RxNetworkApex>
           </template>
         </ChartWrapper>
       </div>
       <div class="chart-wrapper tx-network-usage">
-        <ChartWrapper title="Tx Network Usage" :withFilter="true">
+        <ChartWrapper title="Tx Network Usage" :withFilter="false">
           <template v-slot="{ startTime, endTime, resolution }">
-            <TxNetworkUsage
+            <!-- <TxNetworkUsage
               :service="selectedService"
               :startTime="startTime"
               :endTime="endTime"
               :resolution="resolution"
-            ></TxNetworkUsage>
+            ></TxNetworkUsage> -->
+            <TxNetworkApex :service="selectedService"></TxNetworkApex>
           </template>
         </ChartWrapper>
       </div>
       <div class="chart-wrapper req">
-        <ChartWrapper title="Total Request By Server" :withFilter="true">
+        <ChartWrapper title="Total Request By Server" :withFilter="false">
           <template v-slot="{ startTime, endTime, resolution }">
-            <TotalRequest
+            <!-- <TotalRequest
               :service="selectedService"
               :startTime="startTime"
               :endTime="endTime"
               :resolution="resolution"
-            ></TotalRequest>
+            ></TotalRequest> -->
+            <TotalRequestApex :service="selectedService"></TotalRequestApex>
           </template>
         </ChartWrapper>
       </div>
@@ -104,14 +107,17 @@
         v-if="selectedService && selectedService !== 'All'"
         class="chart-wrapper avg-response"
       >
-        <ChartWrapper title="Average Response Time" :withFilter="true">
+        <ChartWrapper title="Average Response Time" :withFilter="false">
           <template v-slot="{ startTime, endTime, resolution }">
-            <ResponseAvg
+            <!-- <ResponseAvg
               :service="selectedService"
               :startTime="startTime"
               :endTime="endTime"
               :resolution="resolution"
-            ></ResponseAvg>
+            ></ResponseAvg> -->
+            <ResponseAverageApex
+              :service="selectedService"
+            ></ResponseAverageApex>
           </template>
         </ChartWrapper>
       </div>
@@ -136,12 +142,14 @@
       >
         <ChartWrapper title="Error Rate" :withFilter="false">
           <template v-slot="{ startTime, endTime, resolution }">
-            <ErrorToReq
+            <!-- <ErrorToReq
               :service="selectedService"
               :startTime="startTime"
               :endTime="endTime"
               :resolution="resolution"
-            ></ErrorToReq>
+            ></ErrorToReq> --><RequestErrorRatioApex
+              :service="selectedService"
+            ></RequestErrorRatioApex>
           </template>
         </ChartWrapper>
       </div>
@@ -163,7 +171,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import MemApex from '../components/apexChart/MemApex.vue'
+import RequestErrorRatioApex from '../components/apexChart/RequestErrorRatioApex.vue'
 
 const selectedService = ref('All')
 const currentPage = ref('dashboard')

@@ -64,9 +64,7 @@ import { ref, onMounted, watch } from 'vue'
 import { urls } from '../../urls'
 import { useAxios } from '../../composables/useAxios'
 import axios from 'axios'
-import { subDays, subMonths, subWeeks, subYears } from 'date-fns'
 
-const memData = ref({})
 const series = ref([])
 const chartRef = ref(null)
 const selection = ref('one_week')
@@ -116,30 +114,25 @@ const chartOptions = ref({
   },
 })
 
-const props = defineProps(['service', 'startTime', 'endTime', 'resolution'])
+const props = defineProps(['url', 'service'])
 
-const fetchMemData = async (interval, totalPoint = 500, service) => {
-  const { data, error, axiosData } = useAxios(urls.getMemUsage(), 'post', {
+const fetchData = async (interval, totalPoint = 500, service) => {
+  const { data, error, axiosData } = useAxios(props.url(), 'post', {
     interval,
     totalPoint,
     machines:
       service !== 'All'
-        ? (await axios.get(urls.getMachines(service))).data
+        ? (await axios.get(urls.getMachines(props.service))).data
         : undefined,
   })
   await axiosData()
 
   if (error.value) {
-    console.error('Error fetching MEM data:', error.value)
+    console.error('Error fetching data:', error.value)
     return
   }
 
-  memData.value = data.value
-  // console.log(cpuData.value)
-  // cpuData.value.forEach(item => {
-  //   item.time = convertTimeZone(item.time, 'Asia/Bangkok')
-  // })
-  series.value = Object.entries(memData.value).map(([k, v]) => {
+  series.value = Object.entries(data.value).map(([k, v]) => {
     return {
       name: k,
       data: v.map(r => {
@@ -164,22 +157,22 @@ const updateData = function (timeline) {
   const now = new Date()
   switch (timeline) {
     case 'one_month':
-      fetchMemData('1 month', 500, props.service)
+      fetchData('1 month', 500, props.service)
       break
     case 'six_months':
-      fetchMemData('6 months', 500, props.service)
+      fetchData('6 months', 500, props.service)
       break
     case 'one_year':
-      fetchMemData('1 year', 500, props.service)
+      fetchData('1 year', 500, props.service)
       break
     case 'ytd':
-      fetchMemData('1 day', 500, props.service)
+      fetchData('1 day', 500, props.service)
       break
     case 'three_days':
-      fetchMemData('3 days', 500, props.service)
+      fetchData('3 days', 500, props.service)
       break
     case 'one_week':
-      fetchMemData('1 week', 500, props.service)
+      fetchData('1 week', 500, props.service)
       break
     default:
   }

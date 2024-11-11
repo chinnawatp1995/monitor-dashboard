@@ -30,4 +30,5 @@ export const urls = {
   deleteRecipient: recipientId =>
     `${SERVER_URL}/delete-recipient?recipientId=${recipientId}`,
   getController: service => `${SERVER_URL}/controllers?service=${service}`,
+  getRequestErrorRatio: () => `${SERVER_URL}/request-error-ratio`,
 }
