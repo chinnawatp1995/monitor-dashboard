@@ -77,7 +77,7 @@ const chartOptions = ref({
   plotOptions: {
     bar: {
       horizontal: false,
-      borderRadius: 10,
+      borderRadius: 1,
       borderRadiusApplication: 'end', // 'around', 'end'
       borderRadiusWhenStacked: 'last', // 'all', 'last'
       dataLabels: {

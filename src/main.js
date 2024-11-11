@@ -70,6 +70,7 @@ import {
   BaseApexColumnChart,
   RequestErrorRatioApex,
   RequestPathApex,
+  ErrorRankingApex,
 } from './components'
 import IftaLabel from 'primevue/iftalabel'
 import VueApexCharts from 'vue3-apexcharts'
@@ -152,6 +153,7 @@ const customComponents = {
   BaseApexColumnChart,
   RequestErrorRatioApex,
   RequestPathApex,
+  ErrorRankingApex,
 }
 
 Object.entries(customComponents).forEach(([name, component]) => {

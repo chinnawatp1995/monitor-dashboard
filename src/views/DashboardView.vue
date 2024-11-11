@@ -128,12 +128,13 @@
       >
         <ChartWrapper title="Error Ranking" :withFilter="false">
           <template v-slot="{ startTime, endTime, resolution }">
-            <ErrorRanking
+            <!-- <ErrorRanking
               :service="selectedService"
               :startTime="startTime"
               :endTime="endTime"
               :resolution="resolution"
-            ></ErrorRanking>
+            ></ErrorRanking> -->
+            <ErrorRankingApex :service="selectedService"></ErrorRankingApex>
           </template>
         </ChartWrapper>
       </div>
