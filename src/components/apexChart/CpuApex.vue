@@ -70,6 +70,7 @@ const cpuData = ref({})
 const series = ref([])
 const chartRef = ref(null)
 const selection = ref('one_week')
+const totalPoint = ref(300)
 const chartOptions = ref({
   chart: {
     type: 'area',
@@ -107,7 +108,7 @@ const chartOptions = ref({
 
 const props = defineProps(['service', 'startTime', 'endTime', 'resolution'])
 
-const fetchCpuData = async (interval, totalPoint = 500, service) => {
+const fetchCpuData = async (interval, totalPoint = 300, service) => {
   const { data, error, axiosData } = useAxios(urls.getCpuUsage(), 'post', {
     interval,
     totalPoint,
@@ -153,22 +154,22 @@ const updateData = function (timeline) {
   const now = new Date()
   switch (timeline) {
     case 'one_month':
-      fetchCpuData('1 month', 500, props.service)
+      fetchCpuData('1 month', totalPoint.value, props.service)
       break
     case 'six_months':
-      fetchCpuData('6 months', 500, props.service)
+      fetchCpuData('6 months', totalPoint.value, props.service)
       break
     case 'one_year':
-      fetchCpuData('1 year', 500, props.service)
+      fetchCpuData('1 year', totalPoint.value, props.service)
       break
     case 'ytd':
-      fetchCpuData('1 day', 500, props.service)
+      fetchCpuData('1 day', totalPoint.value, props.service)
       break
     case 'three_days':
-      fetchCpuData('3 days', 500, props.service)
+      fetchCpuData('3 days', totalPoint.value, props.service)
       break
     case 'one_week':
-      fetchCpuData('1 week', 500, props.service)
+      fetchCpuData('1 week', totalPoint.value, props.service)
       break
     default:
   }

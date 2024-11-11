@@ -70,6 +70,7 @@ const memData = ref({})
 const series = ref([])
 const chartRef = ref(null)
 const selection = ref('one_week')
+const totalPoint = ref(300)
 const chartOptions = ref({
   chart: {
     type: 'area',
@@ -118,7 +119,11 @@ const chartOptions = ref({
 
 const props = defineProps(['service', 'startTime', 'endTime', 'resolution'])
 
-const fetchMemData = async (interval, totalPoint = 500, service) => {
+const fetchMemData = async (
+  interval,
+  totalPoint = totalPoint.value,
+  service,
+) => {
   const { data, error, axiosData } = useAxios(urls.getMemUsage(), 'post', {
     interval,
     totalPoint,
@@ -164,22 +169,22 @@ const updateData = function (timeline) {
   const now = new Date()
   switch (timeline) {
     case 'one_month':
-      fetchMemData('1 month', 500, props.service)
+      fetchMemData('1 month', totalPoint.value, props.service)
       break
     case 'six_months':
-      fetchMemData('6 months', 500, props.service)
+      fetchMemData('6 months', totalPoint.value, props.service)
       break
     case 'one_year':
-      fetchMemData('1 year', 500, props.service)
+      fetchMemData('1 year', totalPoint.value, props.service)
       break
     case 'ytd':
-      fetchMemData('1 day', 500, props.service)
+      fetchMemData('1 day', totalPoint.value, props.service)
       break
     case 'three_days':
-      fetchMemData('3 days', 500, props.service)
+      fetchMemData('3 days', totalPoint.value, props.service)
       break
     case 'one_week':
-      fetchMemData('1 week', 500, props.service)
+      fetchMemData('1 week', totalPoint.value, props.service)
       break
     default:
   }

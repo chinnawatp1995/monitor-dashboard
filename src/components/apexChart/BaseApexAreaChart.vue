@@ -67,6 +67,7 @@ import axios from 'axios'
 
 const series = ref([])
 const chartRef = ref(null)
+const totalPoint = ref(300)
 const selection = ref('one_week')
 const chartOptions = ref({
   chart: {
@@ -116,7 +117,7 @@ const chartOptions = ref({
 
 const props = defineProps(['url', 'service'])
 
-const fetchData = async (interval, totalPoint = 500, service) => {
+const fetchData = async (interval, totalPoint = totalPoint.value, service) => {
   const { data, error, axiosData } = useAxios(props.url(), 'post', {
     interval,
     totalPoint,
@@ -157,22 +158,22 @@ const updateData = function (timeline) {
   const now = new Date()
   switch (timeline) {
     case 'one_month':
-      fetchData('1 month', 500, props.service)
+      fetchData('1 month', totalPoint.value, props.service)
       break
     case 'six_months':
-      fetchData('6 months', 500, props.service)
+      fetchData('6 months', totalPoint.value, props.service)
       break
     case 'one_year':
-      fetchData('1 year', 500, props.service)
+      fetchData('1 year', totalPoint.value, props.service)
       break
     case 'ytd':
-      fetchData('1 day', 500, props.service)
+      fetchData('1 day', totalPoint.value, props.service)
       break
     case 'three_days':
-      fetchData('3 days', 500, props.service)
+      fetchData('3 days', totalPoint.value, props.service)
       break
     case 'one_week':
-      fetchData('1 week', 500, props.service)
+      fetchData('1 week', totalPoint.value, props.service)
       break
     default:
   }
