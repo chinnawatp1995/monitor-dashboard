@@ -28,6 +28,7 @@ import TotalRequestApex from './apexChart/TotalRequestApex.vue'
 import ResponseAverageApex from './apexChart/ResponseAverageApex.vue'
 import BaseApexColumnChart from './apexChart/BaseApexColumnChart.vue'
 import RequestErrorRatioApex from './apexChart/RequestErrorRatioApex.vue'
+import RequestPathApex from './apexChart/RequestPathApex.vue'
 export {
   SideBar,
   FilterBar,
@@ -59,4 +60,5 @@ export {
   ResponseAverageApex,
   BaseApexColumnChart,
   RequestErrorRatioApex,
+  RequestPathApex,
 }
