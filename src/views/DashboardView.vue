@@ -94,12 +94,13 @@
       >
         <ChartWrapper title="Request Path" :withFilter="false">
           <template v-slot="{ startTime, endTime, resolution }">
-            <RequestPath
+            <!-- <RequestPath
               :service="selectedService"
               :startTime="startTime"
               :endTime="endTime"
               :resolution="resolution"
-            ></RequestPath>
+            ></RequestPath> -->
+            <RequestPathApex :service="selectedService"></RequestPathApex>
           </template>
         </ChartWrapper>
       </div>
@@ -171,7 +172,6 @@
 
 <script setup>
 import { ref } from 'vue'
-import RequestErrorRatioApex from '../components/apexChart/RequestErrorRatioApex.vue'
 
 const selectedService = ref('All')
 const currentPage = ref('dashboard')

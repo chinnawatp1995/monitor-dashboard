@@ -2,8 +2,7 @@
   <div id="chart">
     <apexchart
       type="pie"
-      width="380"
-      ref="chartRef"
+      width="100%"
       :options="chartOptions"
       :series="series"
     ></apexchart>
@@ -21,7 +20,7 @@ const series = ref()
 const chartRef = ref(null)
 const chartOptions = ref({
   chart: {
-    width: 380,
+    width: '100%',
     type: 'pie',
   },
   labels: [],
@@ -47,8 +46,8 @@ async function fetchData() {
   const dataset = []
   const labels = []
   data.forEach(r => {
-    dataset.push(r.path)
-    labels.push(r.value)
+    dataset.push(Number(r.value))
+    labels.push(r.path)
   })
   series.value = dataset
   chartOptions.value = {
