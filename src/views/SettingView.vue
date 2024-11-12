@@ -3,17 +3,9 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { urls } from '../urls'
 
-const recipients = ref([
-  {
-    id: 1,
-    token: 'mock_token_123',
-    roomId: 'room_456',
-    application: 'Test App',
-  },
-])
+const recipients = ref([])
 
 const createRecipient = async newRecipient => {
-  console.log('ok')
   try {
     await axios.post(urls.createRecipient(), newRecipient)
     recipients.value.push({ ...newRecipient })
@@ -31,6 +23,15 @@ const deleteRecipient = async index => {
     console.error('Error deleting recipient:', error)
   }
 }
+
+async function fetchData() {
+  const res = await axios.get(urls.getRecipient())
+  recipients.value = res.data
+}
+
+onMounted(async () => {
+  await fetchData()
+})
 </script>
 
 <template>
@@ -47,9 +48,10 @@ const deleteRecipient = async index => {
     <div class="right-wrapper">
       <h3 class="text-xl mb-4">Existing Recipients</h3>
       <DataTable :value="recipients" class="p-datatable-sm">
+        <Column field="name" header="Name"></Column>
         <Column field="token" header="Token"></Column>
-        <Column field="roomId" header="Room ID"></Column>
-        <Column field="application" header="Application"></Column>
+        <Column field="room" header="Room ID"></Column>
+        <Column field="app" header="Application"></Column>
         <Column header="Actions">
           <template #body="slotProps">
             <Button
