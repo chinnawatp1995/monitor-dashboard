@@ -94,19 +94,14 @@ const chartOptions = ref({
       },
     },
   },
-  tooltip: {
-    x: {
-      format: 'dd MMM yyyy hh:mm:ss',
-    },
-  },
   fill: {
     type: 'gradient',
     gradient: {
       shadeIntensity: 1,
       inverseColors: false,
-      opacityFrom: 0.5,
-      opacityTo: 0.4,
-      stops: [20, 100, 100, 100],
+      opacityFrom: 0.4,
+      opacityTo: 0.2,
+      stops: [40, 100, 100, 100],
     },
   },
   stroke: {
@@ -137,7 +132,7 @@ const fetchData = async (interval, totalPoint = totalPoint.value, service) => {
     return {
       name: k,
       data: v.map(r => {
-        return [new Date(r.bucket.split(' ')[0]).getTime(), r.value]
+        return [new Date(r.bucket).getTime(), Number(r.value)]
       }),
     }
   })
