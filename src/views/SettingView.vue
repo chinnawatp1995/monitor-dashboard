@@ -14,10 +14,10 @@ const createRecipient = async newRecipient => {
   }
 }
 
-const deleteRecipient = async index => {
+const deleteRecipient = async id => {
   try {
-    // TODO: Replace with actual API endpoint
-    await axios.delete(`/api/recipients/${recipients.value[index].id}`)
+    await axios.get(urls.deleteRecipient(id))
+    const index = recipients.value.findIndex(r => r.id === id)
     recipients.value.splice(index, 1)
   } catch (error) {
     console.error('Error deleting recipient:', error)
@@ -57,7 +57,7 @@ onMounted(async () => {
             <Button
               icon="pi pi-trash"
               class="p-button-danger p-button-sm"
-              @click="deleteRecipient(slotProps.index)"
+              @click="deleteRecipient(slotProps.data.id)"
             />
           </template>
         </Column>
