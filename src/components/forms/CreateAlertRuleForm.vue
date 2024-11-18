@@ -8,10 +8,12 @@
       </FloatLabel>
     </div>
     <div class="form-field">
-      <FloatLabel variant="on">
-        <InputText id="expression" v-model="expression" />
-        <label for="expression">Expression</label>
-      </FloatLabel>
+      <Dropdown
+        id="alertType"
+        v-model="alertType"
+        :options="Object.keys(typeOptions)"
+        placeholder="Select type"
+      />
     </div>
     <div class="form-field">
       <FloatLabel variant="on">
@@ -25,14 +27,14 @@
         <label for="silenceTime">Silence Time</label>
       </FloatLabel>
     </div>
-    <div class="form-field">
+    <!-- <div class="form-field">
       <Dropdown
         id="severity"
         v-model="severity"
         :options="[0, 1, 2, 3, 4, 5]"
         placeholder="Select severity"
       />
-    </div>
+    </div> -->
     <div class="form-field">
       <FloatLabel variant="on">
         <Textarea
@@ -50,15 +52,15 @@
 
 <script setup>
 import { urls } from '../../urls'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
-const expression = ref('')
+const alertType = ref('')
 const duration = ref('')
 const silenceTime = ref('')
 const name = ref('')
-const severity = ref('')
 const templateMessage = ref('')
+const typeOptions = ref([])
 
 const emit = defineEmits(['create:rule'])
 
@@ -66,23 +68,27 @@ const createAlertRule = async () => {
   try {
     const res = await axios.post(urls.createAlertRule(), {
       name: name.value,
-      expression: expression.value,
+      type: alertType.value,
       duration: duration.value,
       silence_time: silenceTime.value,
-      severity: severity.value,
       message: templateMessage.value,
     })
     emit('create:rule', res.data)
-    expression.value = ''
+    type.value = ''
     duration.value = ''
     silenceTime.value = ''
     name.value = ''
-    severity.value = ''
     templateMessage.value = ''
   } catch (e) {
     console.log(e)
   }
 }
+
+onMounted(async () => {
+  const res = await axios.get(urls.getAlertType())
+  typeOptions.value = res.data
+  console.log(typeOptions.value)
+})
 </script>
 
 <style scoped>
@@ -93,6 +99,7 @@ const createAlertRule = async () => {
 }
 .form-field {
   display: flex;
+  width: '100%';
   flex-direction: column;
 }
 </style>

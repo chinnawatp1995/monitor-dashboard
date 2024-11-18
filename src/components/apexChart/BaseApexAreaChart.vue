@@ -67,7 +67,7 @@ import axios from 'axios'
 
 const series = ref([])
 const chartRef = ref(null)
-const totalPoint = ref(500)
+const totalPoint = ref(250)
 const selection = ref('one_week')
 const chartOptions = ref({
   chart: {

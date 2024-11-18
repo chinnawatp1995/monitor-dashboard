@@ -6,6 +6,7 @@
         <Button
           icon="pi pi-times"
           severity="danger"
+          @click="deleteRule(rule.id)"
           raised
           rounded
           outlined
@@ -15,10 +16,8 @@
     <template #content>
       <div class="card-content">
         <div class="card-content-item">
-          <label style="font-weight: bold; font-size: 0.75rem"
-            >Expression</label
-          >
-          <p>{{ rule.expression }}</p>
+          <label style="font-weight: bold; font-size: 0.75rem">Type</label>
+          <p>{{ rule.type }}</p>
         </div>
         <div class="card-content-item">
           <div>
@@ -26,12 +25,6 @@
               >Duration</label
             >
             <p>{{ rule.duration }}</p>
-          </div>
-          <div>
-            <label style="font-weight: bold; font-size: 0.75rem"
-              >Severity</label
-            >
-            <p>{{ rule.severity }}</p>
           </div>
         </div>
         <div class="card-content-item">
@@ -48,16 +41,14 @@
         </div>
         <div class="card-content-item">
           <div>
-            <label style="font-weight: bold; font-size: 0.75rem"
-              >Recipients</label
-            >
+            <label style="font-weight: bold; font-size: 0.75rem">Groups</label>
             <Chip
-              v-for="recipient in ruleRecipients"
-              :key="recipient.id"
-              :value="recipient.name"
-              :label="recipient.name"
+              v-for="group in rule.groups"
+              :key="group.id"
+              :value="group.name"
+              :label="group.name"
               removable
-              @remove="removeRecipient(recipient)"
+              @remove="removeGroup(group)"
             />
           </div>
         </div>
@@ -75,8 +66,8 @@
           <div>
             <h4>Recievers</h4>
             <Listbox
-              v-model="selectedRecipients"
-              :options="props.recipients"
+              v-model="selectedGroups"
+              :options="props.groups"
               multiple
               optionLabel="name"
               optionValue="id"
@@ -86,7 +77,7 @@
               icon="pi pi-check"
               label="confirm"
               @click="
-                addRecipientToRule(props.rule.id, selectedRecipients), toggle()
+                updateGroupOfRule(props.rule.id, selectedGroups), toggle()
               "
             ></Button>
           </div>
@@ -114,14 +105,13 @@
 import axios from 'axios'
 import { onMounted, ref, watch } from 'vue'
 import { urls } from '../urls'
-const props = defineProps(['rule', 'recipients'])
-const selectedRecipients = ref()
-const addRecipientError = ref()
+const props = defineProps(['rule', 'groups'])
+const selectedGroups = ref(props.rule.groups?.map(g => g.id) ?? [])
+const addGroupError = ref()
 const op = ref()
-const ruleRecipientIds = ref()
-const ruleRecipients = ref()
+const ruleGroups = ref()
 const dialogShow = ref(false)
-const ruleEnabled = ref(props.rule.enabled)
+const ruleEnabled = ref(props.rule.enable)
 
 const emit = defineEmits([
   'update:rule',
@@ -134,41 +124,45 @@ const toggle = event => {
   op.value.toggle(event)
 }
 
-async function getRecipientsByRuled() {
-  try {
-    const res = await axios.get(urls.getRecipient(props.rule.id))
-    ruleRecipientIds.value = res.data.map(r => r.id)
-    ruleRecipients.value = res.data
-    selectedRecipients.value = ruleRecipientIds.value
-  } catch (e) {}
-}
-
-async function addRecipientToRule(ruleId, recipientId) {
-  if (!selectedRecipients.value) {
-    console.error('No recipients selected')
+async function addGroupToRule(ruleId) {
+  if (!selectedGroups.value) {
+    console.error('No group selected')
     return
   }
   try {
-    await axios.post(urls.addRecipient(), {
+    await axios.post(urls.addGroupToRule(), {
       ruleId,
-      recipientId: selectedRecipients.value,
+      groupIds: selectedGroups.value,
     })
   } catch (e) {
-    addRecipientError.value = e
+    addGroupError.value = e
     console.error('Failed to add recipient:', e)
   }
 }
 
-async function removeRecipient(recipient) {
+async function removeGroup(group) {
   try {
-    const res = await axios.get(
-      urls.removeRecipientFromRule(recipient.id, props.rule.id),
-    )
-    ruleRecipients.value = ruleRecipients.value.filter(
-      r => r.id !== recipient.id,
+    const res = await axios.post(
+      urls.removeGroupFromRule(group.id, props.rule.id),
+      {
+        groupIds: [group.id],
+        ruleId: props.rule.id,
+      },
     )
   } catch (e) {
     console.error('Failed to remove recipient:', e)
+  }
+}
+
+async function updateGroupOfRule(ruleId) {
+  try {
+    await axios.post(urls.updateGroupOfRule(), {
+      ruleId,
+      groupIds: selectedGroups.value,
+    })
+  } catch (e) {
+    addGroupError.value = e
+    console.error('Failed to add recipient:', e)
   }
 }
 
@@ -177,13 +171,10 @@ async function deleteRule(ruleId) {
 }
 
 async function updateRule(rule) {
-  console.log(rule)
   emit('update:rule', rule)
 }
 
-onMounted(async () => {
-  await getRecipientsByRuled()
-})
+onMounted(async () => {})
 
 watch(ruleEnabled, newValue => {
   if (newValue) {

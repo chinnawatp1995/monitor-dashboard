@@ -21,7 +21,7 @@ export const urls = {
   addRecipient: () => `${SERVER_URL}/add-recipient`,
   enableRule: ruleId => `${SERVER_URL}/enable-rule?ruleId=${ruleId}`,
   disableRule: ruleId => `${SERVER_URL}/disable-rule?ruleId=${ruleId}`,
-  deleteRule: ruleId => `${SERVER_URL}/delete-alert?ruleId=${ruleId}`,
+  deleteRule: ruleId => `${SERVER_URL}/delete-rule?ruleId=${ruleId}`,
   updateRule: () => `${SERVER_URL}/update-alert`,
   getRecipient: ruleId =>
     `${SERVER_URL}/recipients${ruleId ? `?ruleId=${ruleId}` : ''}`,
@@ -31,4 +31,9 @@ export const urls = {
     `${SERVER_URL}/delete-recipient?recipientId=${recipientId}`,
   getController: service => `${SERVER_URL}/controllers?service=${service}`,
   getRequestErrorRatio: () => `${SERVER_URL}/request-error-ratio`,
+  getAlertType: () => `${SERVER_URL}/alert-type`,
+  getGroups: () => `${SERVER_URL}/groups`,
+  removeGroupFromRule: () => `${SERVER_URL}/remove-group-from-rule`,
+  addGroupToRule: () => `${SERVER_URL}/add-group-to-rule`,
+  updateGroupOfRule: () => `${SERVER_URL}/update-group-of-rule`,
 }

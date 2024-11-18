@@ -7,7 +7,7 @@ import AlertRuleCard from '../components/AlertRuleCard.vue'
 const alertRules = ref([])
 
 const { data, error, axiosData } = useAxios(urls.getAlertRules(), 'get')
-const recipients = ref()
+const groups = ref()
 
 async function disableRule(ruleId) {
   const index = alertRules.value.findIndex(rule => rule.id === ruleId)
@@ -33,18 +33,25 @@ async function createRule(rule) {
   await axios.post(urls.createRule(), rule)
 }
 
+async function deleteRule(ruleId) {
+  const index = alertRules.value.findIndex(r => r.id === ruleId)
+  alertRules.value.splice(index, 1)
+  console.log(ruleId)
+  await axios.get(urls.deleteRule(ruleId))
+}
+
 function addRule(rule) {
   alertRules.value.push(rule)
 }
 
-async function getRecipients() {
-  const res = await axios.get(urls.getRecipient())
-  recipients.value = res.data
+async function getGroups() {
+  const res = await axios.get(urls.getGroups())
+  groups.value = res.data
 }
 
 onMounted(async () => {
   await axiosData()
-  await getRecipients()
+  await getGroups()
   alertRules.value = data.value
 })
 </script>
@@ -61,12 +68,12 @@ onMounted(async () => {
       <div class="card-wrapper" v-for="rule in alertRules">
         <AlertRuleCard
           :rule="rule"
-          :recipients="recipients"
+          :groups="groups"
           @disable:rule="disableRule"
           @enable:rule="enableRule"
           @update:rule="updateRule"
           @delete:rule="deleteRule"
-          @create:rule="addRule"
+          @create:rule="createRule"
         />
       </div>
     </div>
