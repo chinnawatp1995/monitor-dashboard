@@ -1,0 +1,7 @@
+version: '3.8'
+services:
+  monitor-dashboard:
+    image: monitordashboard:latest
+    command: http-server dist
+    ports:
+      - '8080:8080'

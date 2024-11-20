@@ -22,14 +22,13 @@ const fetchPathData = async () => {
   try {
     const res = await axios.get(urls.getErrorRanking(props.service))
     errorRanking.value = res.data
-    // console.log(res.data)
     chartData.value = {
       labels: errorRanking.value.map(v => v.error_message),
       datasets: [
         {
           data: errorRanking.value.map(v => v.error_count),
-          backgroundColor: theme1, // Define your background colors here
-          hoverBackgroundColor: '', // Define hover background colors here
+          backgroundColor: theme1,
+          hoverBackgroundColor: '',
         },
       ],
     }

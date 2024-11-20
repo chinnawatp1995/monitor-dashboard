@@ -19,6 +19,7 @@
 import axios from 'axios'
 import { onMounted, onBeforeUnmount } from 'vue'
 import { ref } from 'vue'
+import { urls } from '../urls'
 
 const selectedService = ref()
 const services = ref(['All'])
@@ -41,7 +42,7 @@ function stopPolling() {
 }
 
 async function fetchData() {
-  let res = await axios.get('http://localhost:3010/monitor-server/services')
+  let res = await axios.get(urls.getServices())
   services.value = ['All', ...res.data]
 }
 
