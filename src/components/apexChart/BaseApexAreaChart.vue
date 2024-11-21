@@ -46,6 +46,10 @@
       >
         1W
       </button>
+      <div v-if="filterEnable">
+        <p>Group By :</p>
+        <dropdown v-model="selectedFilter" :options="filterOptions" />
+      </div>
     </div>
 
     <apexchart
@@ -110,7 +114,10 @@ const chartOptions = ref({
   },
 })
 
-const props = defineProps(['url', 'service'])
+const props = defineProps(['url', 'service', 'filterEnable'])
+
+const filterOptions = ['machine', 'controller', 'path']
+const selectedFilter = ref('machine')
 
 const fetchData = async (interval, totalPoint = totalPoint.value, service) => {
   const { data, error, axiosData } = useAxios(props.url(), 'post', {
@@ -120,6 +127,8 @@ const fetchData = async (interval, totalPoint = totalPoint.value, service) => {
       service !== 'All'
         ? (await axios.get(urls.getMachines(props.service))).data
         : undefined,
+    services: service === 'All' ? undefined : [service],
+    groupField: props.filterEnable ? selectedFilter.value : undefined,
   })
   await axiosData()
 
@@ -139,6 +148,13 @@ const fetchData = async (interval, totalPoint = totalPoint.value, service) => {
 }
 watch(
   () => props.service,
+  () => {
+    updateData(selection.value)
+  },
+)
+
+watch(
+  () => selectedFilter.value,
   () => {
     updateData(selection.value)
   },

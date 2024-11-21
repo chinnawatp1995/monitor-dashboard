@@ -2,6 +2,7 @@
   <BaseApexAreaChart
     :service="props.service"
     :url="urls.getTotalRequest"
+    :filterEnable="true"
   ></BaseApexAreaChart>
 </template>
 
