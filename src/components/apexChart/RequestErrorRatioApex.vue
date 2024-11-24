@@ -26,6 +26,7 @@ async function fetchData() {
         props.service !== 'All'
           ? (await axios.get(urls.getMachines(props.service))).data
           : undefined,
+      services: props.service === 'All' ? undefined : [props.service],
     })
     const successDataset = { name: 'Success', data: [] }
     const errorDataset = { name: 'Errors', data: [] }
