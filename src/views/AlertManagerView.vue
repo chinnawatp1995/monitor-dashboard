@@ -9,6 +9,8 @@ const alertRules = ref([])
 const { data, error, axiosData } = useAxios(urls.getAlertRules(), 'get')
 const groups = ref()
 
+const serviceOptions = ref([])
+
 async function disableRule(ruleId) {
   const index = alertRules.value.findIndex(rule => rule.id === ruleId)
   alertRules.value[index].enabled = false
@@ -49,9 +51,15 @@ async function getGroups() {
   groups.value = res.data
 }
 
+const getServices = async () => {
+  const res = await axios.get(urls.getServices())
+  serviceOptions.value = res.data
+}
+
 onMounted(async () => {
   await axiosData()
   await getGroups()
+  await getServices()
   alertRules.value = data.value
 })
 </script>
@@ -69,6 +77,7 @@ onMounted(async () => {
         <AlertRuleCard
           :rule="rule"
           :groups="groups"
+          :services="serviceOptions"
           @disable:rule="disableRule"
           @enable:rule="enableRule"
           @update:rule="updateRule"

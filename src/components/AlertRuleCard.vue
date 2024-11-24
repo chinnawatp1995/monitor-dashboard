@@ -27,6 +27,14 @@
             <p>{{ rule.duration }}</p>
           </div>
         </div>
+        <div v-if="rule.type !== 'server_down'" class="card-content-item">
+          <div>
+            <label style="font-weight: bold; font-size: 0.75rem"
+              >Threshold</label
+            >
+            <p>{{ rule.threshold }}</p>
+          </div>
+        </div>
         <div class="card-content-item">
           <div>
             <label style="font-weight: bold; font-size: 0.75rem"
@@ -52,9 +60,31 @@
             />
           </div>
         </div>
+        <div class="card-content-item">
+          <div>
+            <label style="font-weight: bold; font-size: 0.75rem"
+              >Services</label
+            >
+            <Chip
+              v-for="service in rule.service"
+              :key="service"
+              :value="service"
+              :label="service"
+              removable
+              @remove="removeService(service)"
+            />
+          </div>
+        </div>
       </div>
       <div class="card-input">
         <ToggleSwitch v-model="ruleEnabled" />
+        <Button
+          icon="pi pi-plus"
+          severity="warning"
+          raised
+          outlined
+          @click="toggle2"
+        ></Button>
         <Button
           icon="pi pi-user-plus"
           severity="warning"
@@ -62,6 +92,22 @@
           outlined
           @click="toggle"
         ></Button>
+        <Popover ref="op2">
+          <div>
+            <h4>Services</h4>
+            <Listbox
+              v-model="selectedServices"
+              :options="props.services"
+              multiple
+              class="w-full md:w-100"
+            ></Listbox>
+            <Button
+              icon="pi pi-check"
+              label="confirm"
+              @click="updateServiceToRule(), toggle2()"
+            ></Button>
+          </div>
+        </Popover>
         <Popover ref="op">
           <div>
             <h4>Recievers</h4>
@@ -105,10 +151,12 @@
 import axios from 'axios'
 import { onMounted, ref, watch } from 'vue'
 import { urls } from '../urls'
-const props = defineProps(['rule', 'groups'])
+const props = defineProps(['rule', 'groups', 'services'])
 const selectedGroups = ref(props.rule.groups?.map(g => g.id) ?? [])
+const selectedServices = ref(props.rule.service ?? [])
 const addGroupError = ref()
 const op = ref()
+const op2 = ref()
 const ruleGroups = ref()
 const dialogShow = ref(false)
 const ruleEnabled = ref(props.rule.enable)
@@ -122,6 +170,10 @@ const emit = defineEmits([
 
 const toggle = event => {
   op.value.toggle(event)
+}
+
+const toggle2 = event => {
+  op2.value.toggle(event)
 }
 
 async function addGroupToRule(ruleId) {
@@ -154,6 +206,28 @@ async function removeGroup(group) {
   }
 }
 
+async function removeService(service) {
+  try {
+    const res = await axios.post(urls.removeServiceFromRule(), {
+      service: service,
+      ruleId: props.rule.id,
+    })
+  } catch (e) {
+    console.error('Failed to remove service:', e)
+  }
+}
+
+async function addService(service) {
+  try {
+    const res = await axios.post(urls.addServiceToRule(), {
+      service: service,
+      ruleId: props.rule.id,
+    })
+  } catch (e) {
+    console.error('Failed to add service:', e)
+  }
+}
+
 async function updateGroupOfRule(ruleId) {
   try {
     await axios.post(urls.updateGroupOfRule(), {
@@ -163,6 +237,17 @@ async function updateGroupOfRule(ruleId) {
   } catch (e) {
     addGroupError.value = e
     console.error('Failed to add recipient:', e)
+  }
+}
+
+async function updateServiceToRule() {
+  try {
+    await axios.post(urls.updateServiceToRule(), {
+      ruleId: props.rule.id,
+      services: selectedServices.value,
+    })
+  } catch (e) {
+    console.log(e)
   }
 }
 

@@ -7,8 +7,8 @@
         <label for="name">Name</label>
       </FloatLabel>
       <FloatLabel variant="on">
-        <InputText v-model="rule.severity" />
-        <label for="severity">Severity</label>
+        <InputText v-model="rule.threshold" />
+        <label for="threshold">threshold</label>
       </FloatLabel>
     </div>
     <div class="input-line">

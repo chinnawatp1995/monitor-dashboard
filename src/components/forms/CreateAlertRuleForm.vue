@@ -23,17 +23,34 @@
     </div>
     <div class="form-field">
       <FloatLabel variant="on">
+        <InputText id="threshold" v-model="threshold" />
+        <label for="threshold">Threshold</label>
+      </FloatLabel>
+    </div>
+    <div class="form-field">
+      <FloatLabel variant="on">
         <InputText id="silenceTime" v-model="silenceTime" />
         <label for="silenceTime">Silence Time</label>
       </FloatLabel>
     </div>
+    <div class="form-field">
+      <MultiSelect
+        v-model="selectedServices"
+        :options="serviceOptions"
+        filter
+        placeholder="Select Services"
+        class="w-full md:w-80"
+      ></MultiSelect>
+    </div>
     <!-- <div class="form-field">
-      <Dropdown
-        id="severity"
-        v-model="severity"
-        :options="[0, 1, 2, 3, 4, 5]"
-        placeholder="Select severity"
-      />
+      <MultiSelect
+        v-model="selectedGroups"
+        :options="groupOptions"
+        optionLabel="name"
+        filter
+        placeholder="Select Groups"
+        class="w-full md:w-80"
+      ></MultiSelect>
     </div> -->
     <div class="form-field">
       <FloatLabel variant="on">
@@ -61,6 +78,12 @@ const silenceTime = ref('')
 const name = ref('')
 const templateMessage = ref('')
 const typeOptions = ref([])
+const threshold = ref('')
+// const selectedGroups = ref([])
+const selectedServices = ref([])
+
+const serviceOptions = ref([])
+const groupOptions = ref([])
 
 const emit = defineEmits(['create:rule'])
 
@@ -72,22 +95,47 @@ const createAlertRule = async () => {
       duration: duration.value,
       silence_time: silenceTime.value,
       message: templateMessage.value,
+      threshold: threshold.value,
+      services: selectedServices.value,
     })
+    // console.log({
+    //   name: name.value,
+    //   type: alertType.value,
+    //   duration: duration.value,
+    //   silence_time: silenceTime.value,
+    //   message: templateMessage.value,
+    //   threshold: threshold.value,
+    //   services: selectedServices.value,
+    // })
     emit('create:rule', res.data)
-    type.value = ''
+    alertType.value = ''
     duration.value = ''
     silenceTime.value = ''
     name.value = ''
     templateMessage.value = ''
+    threshold.value = ''
+    selectedGroups.value = []
+    selectedServices.value = []
   } catch (e) {
     console.log(e)
   }
 }
 
+const getServices = async () => {
+  const res = await axios.get(urls.getServices())
+  serviceOptions.value = res.data
+}
+
+const getGroup = async () => {
+  const res = await axios.get(urls.getGroups())
+  groupOptions.value = res.data
+}
+
 onMounted(async () => {
   const res = await axios.get(urls.getAlertType())
   typeOptions.value = res.data
-  console.log(typeOptions.value)
+  await getServices()
+  await getGroup()
 })
 </script>
 
