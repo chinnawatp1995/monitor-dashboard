@@ -1,5 +1,5 @@
-export const SERVER_URL = 'http://localhost:3010/monitor-server'
-// export const SERVER_URL = 'http://47.129.235.187/monitor-server'
+// export const SERVER_URL = 'http://localhost:3010/monitor-server'
+export const SERVER_URL = 'http://47.129.235.187/monitor-server'
 export const urls = {
   getServices: () => `${SERVER_URL}/services`,
   getServerStatus: () => `${SERVER_URL}/server-status`,
