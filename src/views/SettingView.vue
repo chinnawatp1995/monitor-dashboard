@@ -2,8 +2,10 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { urls } from '../urls'
+import { CreateGroupForm } from '../components'
 
 const recipients = ref([])
+const groups = ref([])
 
 const createRecipient = async newRecipient => {
   try {
@@ -11,6 +13,14 @@ const createRecipient = async newRecipient => {
     recipients.value.push({ ...newRecipient })
   } catch (error) {
     console.error('Error adding recipient:', error)
+  }
+}
+
+const createGroup = async newGroup => {
+  try {
+    await axios.post(urls.createGroup(), newGroup)
+  } catch (e) {
+    console.log(e)
   }
 }
 
@@ -24,18 +34,42 @@ const deleteRecipient = async id => {
   }
 }
 
-async function fetchData() {
-  const res = await axios.get(urls.getRecipient())
-  recipients.value = res.data
+async function getRecipients() {
+  try {
+    const res = await axios.get(urls.getRecipient())
+    recipients.value = res.data.map(r => {
+      const { id, name, config } = r
+      const { app, token, room } = config
+      return {
+        id,
+        name,
+        app,
+        token,
+        room,
+      }
+    })
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+async function getGroups() {
+  try {
+    const res = await axios.get(urls.getGroups())
+    groups.value = res.data
+  } catch (e) {
+    console.log(e)
+  }
 }
 
 onMounted(async () => {
-  await fetchData()
+  await getRecipients()
+  await getGroups()
 })
 </script>
 
 <template>
-  <div class="page-wrapper">
+  <div class="row-wrapper">
     <h2 class="text-2xl font-bold mb-4">Monitor Alert Recipients</h2>
 
     <div class="left-wrapper mb-8">
@@ -64,10 +98,22 @@ onMounted(async () => {
       </DataTable>
     </div>
   </div>
+
+  <div class="row-wrapper">
+    <h2>Groups</h2>
+    <div class="left-wrapper">
+      <CreateGroupForm :recipients @createGroup="createGroup"></CreateGroupForm>
+    </div>
+    <div class="right-wrapper">
+      <div v-for="g in groups">
+        <GroupCard :group="g" :recipients></GroupCard>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-.page-wrapper {
+.row-wrapper {
   display: grid;
   grid-template-columns: 1fr 4fr;
 }

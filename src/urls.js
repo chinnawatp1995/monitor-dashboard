@@ -18,15 +18,13 @@ export const urls = {
   getAlertRules: () => `${SERVER_URL}/alert-rules`,
   createAlertRule: () => `${SERVER_URL}/create-alert`,
   createRecipient: () => `${SERVER_URL}/create-recipient`,
-  addRecipient: () => `${SERVER_URL}/add-recipient`,
+  addRecipientToGroup: () => `${SERVER_URL}/add-recipient-to-group`,
   enableRule: ruleId => `${SERVER_URL}/enable-rule?ruleId=${ruleId}`,
   disableRule: ruleId => `${SERVER_URL}/disable-rule?ruleId=${ruleId}`,
   deleteRule: ruleId => `${SERVER_URL}/delete-rule?ruleId=${ruleId}`,
   updateRule: () => `${SERVER_URL}/update-rule`,
-  getRecipient: ruleId =>
-    `${SERVER_URL}/recipients${ruleId ? `?ruleId=${ruleId}` : ''}`,
-  removeRecipientFromRule: (recipientId, ruleId) =>
-    `${SERVER_URL}/remove-recipient-from-rule?recipientId=${recipientId}&ruleId=${ruleId}`,
+  getRecipient: () => `${SERVER_URL}/recipients`,
+  removeRecipientFromGroup: () => `${SERVER_URL}/remove-recipient-from-group`,
   deleteRecipient: recipientId =>
     `${SERVER_URL}/delete-recipient?recipientId=${recipientId}`,
   getController: service => `${SERVER_URL}/controllers?service=${service}`,
@@ -39,4 +37,6 @@ export const urls = {
   addServiceToRule: () => `${SERVER_URL}/add-service-to-rule`,
   removeServiceFromRule: () => `${SERVER_URL}/remove-service-from-rule`,
   updateServiceToRule: () => `${SERVER_URL}/update-service-to-rule`,
+  createGroup: () => `${SERVER_URL}/create-group`,
+  updateRecipientToGroup: () => `${SERVER_URL}/update-recipient-to-group`,
 }

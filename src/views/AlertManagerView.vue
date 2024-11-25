@@ -24,7 +24,6 @@ async function enableRule(ruleId) {
 }
 
 async function updateRule(rule) {
-  console.log(rule)
   const index = alertRules.value.findIndex(r => r.id === rule.id)
   alertRules.value[index] = rule
   await axios.post(urls.updateRule(rule.id), rule)
@@ -38,7 +37,6 @@ async function createRule(rule) {
 async function deleteRule(ruleId) {
   const index = alertRules.value.findIndex(r => r.id === ruleId)
   alertRules.value.splice(index, 1)
-  console.log(ruleId)
   await axios.get(urls.deleteRule(ruleId))
 }
 

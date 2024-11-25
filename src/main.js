@@ -71,6 +71,8 @@ import {
   RequestErrorRatioApex,
   RequestPathApex,
   ErrorRankingApex,
+  CreateGroupForm,
+  GroupCard,
 } from './components'
 import IftaLabel from 'primevue/iftalabel'
 import VueApexCharts from 'vue3-apexcharts'
@@ -154,6 +156,8 @@ const customComponents = {
   RequestErrorRatioApex,
   RequestPathApex,
   ErrorRankingApex,
+  CreateGroupForm,
+  GroupCard,
 }
 
 Object.entries(customComponents).forEach(([name, component]) => {

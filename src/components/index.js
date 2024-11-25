@@ -30,6 +30,8 @@ import BaseApexColumnChart from './apexChart/BaseApexColumnChart.vue'
 import RequestErrorRatioApex from './apexChart/RequestErrorRatioApex.vue'
 import RequestPathApex from './apexChart/RequestPathApex.vue'
 import ErrorRankingApex from './apexChart/ErrorRankingApex.vue'
+import CreateGroupForm from './forms/CreateGroupForm.vue'
+import GroupCard from './GroupCard.vue'
 export {
   SideBar,
   FilterBar,
@@ -63,4 +65,6 @@ export {
   RequestErrorRatioApex,
   RequestPathApex,
   ErrorRankingApex,
+  CreateGroupForm,
+  GroupCard,
 }
