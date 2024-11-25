@@ -105,7 +105,7 @@ onMounted(async () => {
       <CreateGroupForm :recipients @createGroup="createGroup"></CreateGroupForm>
     </div>
     <div class="right-wrapper">
-      <div v-for="g in groups">
+      <div class="card-wrapper" v-for="g in groups">
         <GroupCard :group="g" :recipients></GroupCard>
       </div>
     </div>
@@ -122,5 +122,8 @@ onMounted(async () => {
 }
 .right-wrapper {
   grid-column: 2 /3;
+}
+.card-wrapper {
+  margin-bottom: 1rem;
 }
 </style>
